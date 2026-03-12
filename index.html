@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>ORO User Card</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<h1 class="title">ORO USER CARD</h1>
+
+<div class="panel">
+
+<input type="file" id="avatar">
+
+<input type="text" id="username" placeholder="Discord Username">
+
+<input type="date" id="date">
+
+<select id="role">
+
+<option>Content Creator Tier 1</option>
+<option>Content Creator Tier 2</option>
+<option>Content Creator Tier 3</option>
+<option>Content Creator Tier 4</option>
+
+<option>Explorer</option>
+
+<option>Iron</option>
+<option>Bronze</option>
+<option>Silver</option>
+<option>Gold</option>
+
+</select>
+
+<button onclick="generateCard()">Generate Card</button>
+
+<button onclick="downloadCard()">Download</button>
+
+</div>
+
+<canvas id="cardCanvas" width="1100" height="550"></canvas>
+
+<script src="script.js"></script>
+
+</body>
+</html>
