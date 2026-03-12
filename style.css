@@ -1,77 +1,69 @@
-body{
-
-background:#05060a;
-
-font-family:Arial;
-
-text-align:center;
-
-color:white;
-
+body {
+  font-family: 'Arial', sans-serif;
+  background: #0f0c29;
+  color: white;
+  margin: 0;
+  padding: 0;
 }
 
-.title{
-
-font-size:44px;
-
-margin-top:40px;
-
-background:linear-gradient(90deg,#ffcc00,#ff7a18);
-
--webkit-background-clip:text;
-
--webkit-text-fill-color:transparent;
-
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-.panel{
-
-margin:30px;
-
+.card {
+  background: linear-gradient(135deg, #2e1a47, #1d1b38);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  position: relative;
+  border: 1px solid #5c3db6;
 }
 
-input,select{
-
-padding:10px;
-
-margin:6px;
-
-border-radius:8px;
-
-border:none;
-
+.logo {
+  width: 80px; /* Можно изменить */
+  height: auto;
+  position: absolute;
+  top: 10px;
+  left: 10px;
 }
 
-button{
-
-padding:10px 20px;
-
-margin:6px;
-
-border:none;
-
-border-radius:10px;
-
-background:linear-gradient(45deg,#ffcc00,#ff7a18);
-
-color:black;
-
-font-weight:bold;
-
-cursor:pointer;
-
+.avatar-container {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #ffcc00;
+  margin-bottom: 15px;
 }
 
-canvas{
+#previewAvatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
-margin-top:30px;
+.info-block h2 {
+  margin: 0;
+  font-size: 24px;
+  background: linear-gradient(to right, #ffcc00, #ff6f00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding: 5px;
+}
 
-border-radius:25px;
+.info-block p {
+  margin: 5px 0;
+  font-size: 16px;
+}
 
-border:2px solid transparent;
-
-border-image:linear-gradient(45deg,#ffcc00,#ff7a18,#ffcc00)1;
-
-box-shadow:0 0 50px rgba(255,160,0,0.35);
-
+.qr-code {
+  width: 100px; /* Можно изменить */
+  height: auto;
+  margin-top: 15px;
 }
