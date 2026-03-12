@@ -1,42 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>ORO User Card</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORO User Card</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<h1 class="title">ORO USER CARD</h1>
-
-<div class="container">
-  <!-- Панель слева -->
-  <div class="panel">
-    <input type="file" id="avatar" accept="image/*">
-    <input type="text" id="username" placeholder="Discord Username">
-    <input type="date" id="date">
-
-    <div class="roles">
-      <label><input type="checkbox" value="Content Creator Tier 1"> Content Creator Tier 1</label>
-      <label><input type="checkbox" value="Content Creator Tier 2"> Content Creator Tier 2</label>
-      <label><input type="checkbox" value="Content Creator Tier 3"> Content Creator Tier 3</label>
-      <label><input type="checkbox" value="Content Creator Tier 4"> Content Creator Tier 4</label>
-      <label><input type="checkbox" value="Explorer"> Explorer</label>
-      <label><input type="checkbox" value="Iron"> Iron</label>
-      <label><input type="checkbox" value="Bronze"> Bronze</label>
-      <label><input type="checkbox" value="Silver"> Silver</label>
-      <label><input type="checkbox" value="Gold"> Gold</label>
+    <h1 class="title">ORO USER CARD</h1>
+    
+    <div class="container">
+        <div class="panel">
+            <input type="text" id="username" placeholder="Username">
+            <input type="date" id="date">
+            
+            <div class="file-upload">
+                <label for="avatar" class="file-upload-btn">
+                    📁 Choose Avatar
+                    <input type="file" id="avatar" accept="image/*">
+                </label>
+            </div>
+            
+            <div class="roles">
+                <label><input type="checkbox" value="Content Creator Tier 1"> Content Creator Tier 1</label>
+                <label><input type="checkbox" value="Content Creator Tier 2"> Content Creator Tier 2</label>
+                <label><input type="checkbox" value="Content Creator Tier 3"> Content Creator Tier 3</label>
+                <label><input type="checkbox" value="Content Creator Tier 4"> Content Creator Tier 4</label>
+                <label><input type="checkbox" value="Explorer"> Explorer</label>
+                <label><input type="checkbox" value="Iron"> Iron</label>
+                <label><input type="checkbox" value="Bronze"> Bronze</label>
+                <label><input type="checkbox" value="Silver"> Silver</label>
+                <label><input type="checkbox" value="Gold"> Gold</label>
+            </div>
+            
+            <button onclick="generateCard()">Generate Card</button>
+            <button onclick="downloadCard()">Download</button>
+        </div>
+        
+        <canvas id="cardCanvas" width="800" height="400"></canvas>
     </div>
-
-    <button onclick="generateCard()">Generate Card</button>
-    <button onclick="downloadCard()">Download</button>
-  </div>
-
-  <!-- Canvas справа -->
-  <canvas id="cardCanvas" width="800" height="400"></canvas>
-</div>
-
-<script src="script.js"></script>
+    
+    <footer class="footer">
+        <p>© 2026 <a href="https://getoro.xyz" target="_blank" class="footer-link">getoro.xyz</a></p>
+        <p class="developer">
+            Developer: 
+            <a href="https://x.com/kaye_moni" target="_blank" class="twitter-link">
+                <svg class="twitter-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+                @kaye_moni
+            </a>
+        </p>
+    </footer>
+    
+    <script src="script.js"></script>
 </body>
 </html>
