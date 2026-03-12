@@ -9,14 +9,28 @@ body {
     flex-direction: column;
 }
 
+/* 🔥 Рамка для заголовка */
+.header-frame {
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
 .title {
     text-align: center;
     font-size: 36px;
-    margin: 20px 0;
+    margin: 0;
+    padding: 15px 30px;
     background: linear-gradient(90deg, #ffcc00, #ff7a18);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    border: 3px solid transparent;
+    border-image: linear-gradient(90deg, #ffcc00, #ff7a18, #ffcc00) 1;
+    border-radius: 16px;
+    box-shadow: 0 0 30px rgba(255, 122, 24, 0.3);
 }
 
 .container {
@@ -221,5 +235,9 @@ canvas {
     .panel {
         width: 100%;
         max-width: 320px;
+    }
+    .title {
+        font-size: 28px;
+        padding: 12px 20px;
     }
 }
