@@ -1,43 +1,37 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Getoro Discord Card</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<title>ORO User Card</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Создать карточку участника Getoro</h1>
-    <form id="cardForm">
-      <label>Ваш ник в Discord:</label>
-      <input type="text" id="username" required />
 
-      <label>Дата присоединения:</label>
-      <input type="date" id="joinDate" required />
+<h1 class="title">ORO USER CARD</h1>
 
-      <label>Загрузите вашу аватарку:</label>
-      <input type="file" id="avatarUpload" accept="image/*" required />
+<div class="panel">
+    <input type="file" id="avatar">
+    <input type="text" id="username" placeholder="Discord Username">
+    <input type="date" id="date">
 
-      <label>Выберите вашу роль:</label>
-      <select id="roleSelect" required></select>
+    <select id="role" multiple size="8">
+        <option>Content Creator Tier 1</option>
+        <option>Content Creator Tier 2</option>
+        <option>Content Creator Tier 3</option>
+        <option>Content Creator Tier 4</option>
+        <option>Explorer</option>
+        <option>Iron</option>
+        <option>Bronze</option>
+        <option>Silver</option>
+        <option>Gold</option>
+    </select>
 
-      <button type="submit">Сгенерировать карточку</button>
-    </form>
+    <button onclick="generateCard()">Generate Card</button>
+    <button onclick="downloadCard()">Download</button>
+</div>
 
-    <div id="cardPreview" class="card" style="display:none;">
-      <!-- Используем прямые ссылки -->
-      <img src="https://ltdfoto.ru/images/2026/03/12/ORO.png" alt="Логотип Getoro" class="logo" />
-      <div class="avatar-container">
-        <img id="previewAvatar" src="" alt="Ваш аватар" />
-      </div>
-      <div class="info-block">
-        <h2 id="previewUsername"></h2>
-        <p>Присоединился: <span id="previewJoinDate"></span></p>
-        <p>Роль: <span id="previewRole"></span></p>
-      </div>
-      <img src="https://ltdfoto.ru/images/2026/03/12/qr.png" alt="QR-код" class="qr-code" />
-    </div>
-  </div>
-  <script src="script.js"></script>
+<canvas id="cardCanvas" width="1100" height="550"></canvas>
+
+<script src="script.js"></script>
 </body>
 </html>
