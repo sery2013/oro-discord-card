@@ -1,44 +1,64 @@
 body {
-    background: #05060a;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    color: white;
+  background: #05060a;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  color: white;
 }
 
 .title {
-    font-size: 44px;
-    margin-top: 40px;
-    background: linear-gradient(90deg,#ffcc00,#ff7a18);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  font-size: 44px;
+  margin-top: 30px;
+  background: linear-gradient(90deg,#ffcc00,#ff7a18);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .panel {
-    margin: 30px;
+  margin: 20px auto;
+  display: inline-block;
+  text-align: left;
+  background: #0b0c14;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 0 30px rgba(255,160,0,0.2);
 }
 
-input, select {
-    padding: 10px;
-    margin: 6px;
-    border-radius: 8px;
-    border: none;
+.panel input[type="text"],
+.panel input[type="date"],
+.panel input[type="file"] {
+  display: block;
+  margin: 8px 0;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  width: 250px;
+}
+
+.roles {
+  margin: 10px 0;
+}
+
+.roles label {
+  display: block;
+  margin: 3px 0;
+  cursor: pointer;
 }
 
 button {
-    padding: 10px 20px;
-    margin: 6px;
-    border: none;
-    border-radius: 10px;
-    background: linear-gradient(45deg,#ffcc00,#ff7a18);
-    color: black;
-    font-weight: bold;
-    cursor: pointer;
+  padding: 10px 20px;
+  margin: 6px 6px 6px 0;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(45deg,#ffcc00,#ff7a18);
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 canvas {
-    margin-top: 30px;
-    border-radius: 25px;
-    border: 2px solid transparent;
-    border-image: linear-gradient(45deg,#ffcc00,#ff7a18,#ffcc00) 1;
-    box-shadow: 0 0 50px rgba(255,160,0,0.35);
+  margin-top: 20px;
+  border-radius: 25px;
+  border: 2px solid transparent;
+  border-image: linear-gradient(45deg,#ffcc00,#ff7a18,#ffcc00) 1;
+  box-shadow: 0 0 50px rgba(255,160,0,0.35);
 }
