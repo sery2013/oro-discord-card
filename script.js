@@ -10,7 +10,7 @@ function generateCard() {
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // 2. ПАТТЕРН (0.03)
+    // 2. ПАТТЕРН
     ctx.save();
     ctx.fillStyle = "rgba(255, 122, 24, 0.03)";
     ctx.font = "bold 35px Fredoka";
@@ -22,10 +22,10 @@ function generateCard() {
     }
     ctx.restore();
 
-    const avX = 25, avY = 70, avS = 140, radius = 18;
+    const avX = 25, avY = 70, avS = 140;
 
     function drawFinalLayer() {
-        // --- ЗАГОЛОВОК И ЛИНИЯ ---
+        // --- ЗАГОЛОВОК ---
         ctx.save();
         ctx.fillStyle = "white";
         ctx.font = "bold 30px Fredoka";
@@ -43,7 +43,7 @@ function generateCard() {
 
         const username = document.getElementById("username").value || "sery2013";
         const date = document.getElementById("date").value || "2026-03-12";
-        // Считываем Bio
+        // Получаем текст из нового поля Bio
         const bioText = document.getElementById("userBio").value || "Web3 Explorer & Content Enthusiast";
 
         // Username & Date
@@ -85,11 +85,11 @@ function generateCard() {
             xStart += bWidth + 10;
         });
 
-        // --- BIO (Динамический) ---
+        // --- BIO (Теперь динамический) ---
         const bioY = yStart + 45;
         ctx.strokeStyle = "rgba(255, 122, 24, 0.5)";
         ctx.strokeRect(185, bioY, 580, 45);
-        ctx.fillStyle = "rgba(20, 21, 31, 0.4)";
+        ctx.fillStyle = "rgba(20, 21, 31, 0.4)"; // Полупрозрачный фон для текста
         ctx.fillRect(185, bioY, 580, 45);
         ctx.fillStyle = "#eee";
         ctx.font = "italic 16px Fredoka";
@@ -138,7 +138,6 @@ function generateCard() {
         qr.src = "https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://getoro.xyz";
     }
 
-    // --- АВАТАР ---
     const avatarInput = document.getElementById("avatar");
     ctx.strokeStyle = "rgba(255, 122, 24, 0.7)";
     ctx.lineWidth = 1;
@@ -158,4 +157,13 @@ function generateCard() {
     } else {
         drawFinalLayer();
     }
+}
+
+// Не забудьте функцию скачивания, если она была в вашем файле
+function downloadCard() {
+    const canvas = document.getElementById("cardCanvas");
+    const link = document.createElement("a");
+    link.download = "oro-user-card.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
 }
