@@ -34,16 +34,17 @@ function generateCard() {
         ctx.fillText("USER CARD ORO", 25, 45);
         ctx.restore();
 
-        // Полоса цветом рамок
         ctx.strokeStyle = "rgba(255, 122, 24, 0.5)";
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.moveTo(275, 35); // Сдвинул начало линии чуть правее из-за слова ORO
+        ctx.moveTo(275, 35);
         ctx.lineTo(765, 35);
         ctx.stroke();
 
         const username = document.getElementById("username").value || "sery2013";
         const date = document.getElementById("date").value || "2026-03-12";
+        // Считываем Bio
+        const bioText = document.getElementById("userBio").value || "Web3 Explorer & Content Enthusiast";
 
         // Username & Date
         ctx.strokeStyle = "rgba(255, 122, 24, 0.5)";
@@ -58,7 +59,7 @@ function generateCard() {
         ctx.font = "18px Fredoka";
         ctx.fillText("Joined: " + date, 205, 152);
 
-        // --- ЦВЕТНЫЕ РОЛИ ---
+        // --- РОЛИ ---
         const roleCheckboxes = document.querySelectorAll(".roles input[type='checkbox']");
         const selectedRoles = Array.from(roleCheckboxes).filter(chk => chk.checked).map(chk => chk.value);
         let xStart = 185, yStart = 180;
@@ -84,15 +85,17 @@ function generateCard() {
             xStart += bWidth + 10;
         });
 
-        // --- BIO ---
+        // --- BIO (Динамический) ---
         const bioY = yStart + 45;
         ctx.strokeStyle = "rgba(255, 122, 24, 0.5)";
         ctx.strokeRect(185, bioY, 580, 45);
+        ctx.fillStyle = "rgba(20, 21, 31, 0.4)";
+        ctx.fillRect(185, bioY, 580, 45);
         ctx.fillStyle = "#eee";
         ctx.font = "italic 16px Fredoka";
-        ctx.fillText("Web3 Explorer & Content Enthusiast", 205, bioY + 28);
+        ctx.fillText(bioText, 205, bioY + 28);
 
-        // --- СОЦИАЛЬНЫЕ СЕТИ (Опущены и иконки исправлены) ---
+        // --- СОЦИАЛЬНЫЕ СЕТИ ---
         const sY = bioY + 105; 
         ctx.font = "14px Fredoka";
         ctx.fillStyle = "white";
