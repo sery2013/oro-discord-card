@@ -1,5 +1,4 @@
 body {
-    /* Новый живой градиент: глубокий синий и теплый акцент в стиле ORO */
     background: radial-gradient(circle at top right, #161625, #0a0a0f), 
                 radial-gradient(circle at bottom left, #2c1a0a, #0a0a0f);
     background-attachment: fixed;
@@ -12,33 +11,30 @@ body {
     flex-direction: column;
 }
 
-/* 🔥 Рамка для заголовка: тонкая и закругленная */
+/* 🔥 Рамка на всю ширину с закруглением */
 .header-frame {
-    width: 100%;
+    width: calc(100% - 40px); /* Учитываем отступы по бокам */
     max-width: 1200px;
     margin: 20px auto;
-    padding: 0 20px;
     box-sizing: border-box;
-    text-align: center;
+    /* Создаем тонкую градиентную обводку */
+    background: linear-gradient(#0a0a0f, #0a0a0f) padding-box, 
+                linear-gradient(90deg, #ffcc00, #ff7a18, #ffcc00) border-box;
+    border: 1.5px solid transparent; 
+    border-radius: 12px;
+    box-shadow: 0 0 25px rgba(255, 122, 24, 0.1);
 }
 
 .title {
-    display: inline-block;
+    text-align: center;
     font-size: 36px;
     margin: 0;
-    padding: 12px 30px;
-    /* Метод создания тонкой закругленной рамки через background-clip */
-    background: linear-gradient(#0a0a0f, #0a0a0f) padding-box, 
-                linear-gradient(90deg, #ffcc00, #ff7a18, #ffcc00) border-box;
-    border: 1.5px solid transparent; /* Тонкая линия */
-    border-radius: 12px; /* Закругление */
-    box-shadow: 0 0 25px rgba(255, 122, 24, 0.15);
-    
-    /* Делаем сам текст градиентным */
-    background-image: linear-gradient(90deg, #ffcc00, #ff7a18);
+    padding: 15px 30px;
+    /* Делаем только текст градиентным */
+    background: linear-gradient(90deg, #ffcc00, #ff7a18);
     -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     background-clip: text;
-    color: transparent;
 }
 
 .container {
@@ -52,7 +48,6 @@ body {
 }
 
 .panel {
-    /* Стеклянный эффект (Glassmorphism) */
     background: rgba(20, 21, 33, 0.7);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -75,7 +70,6 @@ body {
     color: white;
     font-family: 'Fredoka', sans-serif;
     box-sizing: border-box;
-    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .panel input[type="text"]:focus,
@@ -83,26 +77,6 @@ body {
     outline: none;
     border-color: #ff7a18;
     box-shadow: 0 0 10px rgba(255, 122, 24, 0.2);
-}
-
-.panel input[type="text"]::placeholder,
-.panel input[type="date"]::-webkit-datetime-edit {
-    color: rgba(255, 255, 255, 0.5);
-}
-
-/* Белая иконка календаря */
-.panel input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
-    cursor: pointer;
-}
-
-/* 🔥 Современная кнопка загрузки аватара */
-.file-upload {
-    margin: 15px 0;
-}
-
-.file-upload input[type="file"] {
-    display: none;
 }
 
 .file-upload-btn {
@@ -113,57 +87,29 @@ body {
     background: linear-gradient(45deg, #ffcc00, #ff7a18);
     color: #000;
     font-weight: 600;
-    font-family: 'Fredoka', sans-serif;
     cursor: pointer;
     text-align: center;
-    transition: all 0.3s ease;
     box-sizing: border-box;
-    box-shadow: 0 4px 15px rgba(255, 122, 24, 0.2);
-}
-
-.file-upload-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 122, 24, 0.4);
-    filter: brightness(1.1);
 }
 
 .roles {
     margin: 20px 0;
     max-height: 200px;
     overflow-y: auto;
-    padding-right: 8px;
     background: rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     padding: 10px;
 }
 
-.roles::-webkit-scrollbar {
-    width: 5px;
-}
-
-.roles::-webkit-scrollbar-thumb {
-    background: #ff7a18;
-    border-radius: 10px;
-}
+.roles::-webkit-scrollbar { width: 5px; }
+.roles::-webkit-scrollbar-thumb { background: #ff7a18; border-radius: 10px; }
 
 .roles label {
     display: flex;
     align-items: center;
     margin: 6px 0;
-    cursor: pointer;
-    padding: 6px;
-    border-radius: 6px;
-    transition: background 0.2s;
     font-size: 14px;
-}
-
-.roles label:hover {
-    background: rgba(255, 122, 24, 0.1);
-}
-
-.roles input[type="checkbox"] {
-    margin-right: 10px;
-    accent-color: #ff7a18;
+    cursor: pointer;
 }
 
 .button-group {
@@ -179,16 +125,7 @@ button {
     background: linear-gradient(45deg, #ffcc00, #ff7a18);
     color: black;
     font-weight: 600;
-    font-family: 'Fredoka', sans-serif;
     cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 14px;
-}
-
-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 122, 24, 0.4);
-    filter: brightness(1.1);
 }
 
 canvas {
@@ -197,45 +134,8 @@ canvas {
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     max-width: 100%;
     height: auto;
-    background-color: #050508;
 }
 
-/* 🔻 Footer */
-.footer {
-    text-align: center;
-    padding: 30px;
-    margin-top: auto;
-    background: rgba(5, 5, 8, 0.8);
-    backdrop-filter: blur(5px);
-    border-top: 1px solid rgba(255, 122, 24, 0.1);
-}
-
-.footer p {
-    margin: 5px 0;
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.6);
-}
-
-.footer-link {
-    color: #ff7a18;
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.twitter-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: white;
-    text-decoration: none;
-}
-
-.twitter-icon {
-    width: 16px;
-    height: 16px;
-}
-
-/* Контейнер для выравнивания карточки и био */
 .preview-section {
     display: flex;
     flex-direction: column;
@@ -244,7 +144,6 @@ canvas {
     max-width: 800px;
 }
 
-/* Панель для Bio под карточкой */
 .bio-panel {
     background: rgba(20, 21, 33, 0.7);
     backdrop-filter: blur(12px);
@@ -252,7 +151,6 @@ canvas {
     padding: 20px;
     border-radius: 20px;
     border: 1px solid rgba(255, 122, 24, 0.15);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
 }
 
 .bio-panel input {
@@ -263,15 +161,13 @@ canvas {
     border-radius: 10px;
     color: white;
     font-size: 16px;
-    font-family: 'Fredoka', sans-serif;
     box-sizing: border-box;
-    transition: all 0.3s ease;
 }
 
-.bio-panel input:focus {
-    outline: none;
-    border-color: #ff7a18;
-    box-shadow: 0 0 15px rgba(255, 122, 24, 0.2);
+.footer {
+    text-align: center;
+    padding: 30px;
+    border-top: 1px solid rgba(255, 122, 24, 0.1);
 }
 
 @media (max-width: 900px) {
