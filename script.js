@@ -21,7 +21,7 @@ function generateCard(){
         ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
     }
     
-    // 📝 Заголовок карточки (на прежнем месте)
+    // 📝 Заголовок карточки
     ctx.fillStyle = "white";
     ctx.font = "bold 28px Fredoka";
     ctx.fillText("USER CARD ORO", 20, 35);
@@ -94,33 +94,61 @@ function generateCard(){
         img.onerror = () => { if(callback) callback(); };
     }
     
-    // 👤 Аватар
+    // 👤 Аватар с рамкой
     const avatarInput = document.getElementById("avatar");
     if(avatarInput.files && avatarInput.files[0]){
         const reader = new FileReader();
-        reader.onload = e => drawImageSafe(e.target.result, 20, 55, 130, 130, true, drawLogoAndQR);
+        reader.onload = e => {
+            // Рисуем рамку вокруг аватара
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(90, 125, 70, 0, Math.PI*2);
+            ctx.closePath();
+            ctx.strokeStyle = "#ff7a18";
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            ctx.restore();
+            
+            drawImageSafe(e.target.result, 20, 55, 140, 140, true, drawLogoAndQR);
+        };
         reader.readAsDataURL(avatarInput.files[0]);
     } else {
-        // Placeholder
-        ctx.save(); ctx.beginPath(); ctx.arc(85, 120, 65, 0, Math.PI*2); ctx.clip();
-        ctx.fillStyle = "#1a1b29"; ctx.fillRect(20, 55, 130, 130);
-        ctx.fillStyle = "#ff7a18"; ctx.font = "bold 40px Fredoka"; ctx.textAlign = "center";
-        ctx.fillText("👤", 85, 135); ctx.textAlign = "start"; ctx.restore();
+        // Placeholder с рамкой
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(90, 125, 70, 0, Math.PI*2);
+        ctx.closePath();
+        ctx.strokeStyle = "#ff7a18";
+        ctx.lineWidth = 4;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(90, 125, 65, 0, Math.PI*2);
+        ctx.clip();
+        ctx.fillStyle = "#1a1b29";
+        ctx.fillRect(20, 55, 140, 140);
+        ctx.fillStyle = "#ff7a18";
+        ctx.font = "bold 40px Fredoka";
+        ctx.textAlign = "center";
+        ctx.fillText("👤", 90, 135);
+        ctx.textAlign = "start";
+        ctx.restore();
         drawLogoAndQR();
     }
     
     function drawLogoAndQR(){
-        // 🟠 Логотип ORO (справа сверху, на прежнем месте)
-        drawImageSafe("https://ltdfoto.ru/images/2026/03/12/ORO.png", 660, 15, 120, 50);
+        // 🟠 Логотип ORO (справа сверху)
+        drawImageSafe("https://ltdfoto.ru/images/2026/03/12/ORO21937ecdce0bb501.png", 650, 15, 130, 55);
         
-        // 📱 QR код → getoro.xyz (справа снизу)
-        const qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://getoro.xyz";
-        drawImageSafe(qrUrl, 670, 285, 100, 100);
+        // 📱 QR код → getoro.xyz (справа снизу, ПОДНЯТ ВЫШЕ)
+        const qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=https://getoro.xyz";
+        drawImageSafe(qrUrl, 665, 240, 110, 110);
         
         // Подпись под QR
-        ctx.fillStyle = "rgba(255,255,255,0.7)"; ctx.font = "11px Fredoka"; ctx.textAlign = "center";
-        ctx.fillText("Scan to visit", 720, 280);
-        ctx.fillText("getoro.xyz", 720, 400);
+        ctx.fillStyle = "rgba(255,255,255,0.7)";
+        ctx.font = "11px Fredoka";
+        ctx.textAlign = "center";
+        ctx.fillText("Scan to visit", 720, 235);
+        ctx.fillText("getoro.xyz", 720, 365);
         ctx.textAlign = "start";
     }
 }
