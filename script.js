@@ -10,14 +10,24 @@ gradient.addColorStop(1,'#1f1f2a');
 ctx.fillStyle=gradient;
 ctx.fillRect(0,0,canvas.width,canvas.height);
 
+// Сетка на фоне
+ctx.strokeStyle='rgba(255,122,24,0.08)';
+ctx.lineWidth=1;
+for(let i=0;i<canvas.width;i+=40){
+    ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,canvas.height);ctx.stroke();
+}
+for(let i=0;i<canvas.height;i+=40){
+    ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(canvas.width,i);ctx.stroke();
+}
+
 // Название карточки сверху
 ctx.fillStyle="white";
-ctx.font="30px Fredoka";
+ctx.font="bold 30px Fredoka";
 ctx.fillText("USER CARD ORO",20,40);
 
 // Username и дата
-const username=document.getElementById("username").value;
-const date=document.getElementById("date").value;
+const username=document.getElementById("username").value||"Username";
+const date=document.getElementById("date").value||"2026-01-01";
 
 // Username рамка
 ctx.fillStyle="#1a1b29";
@@ -27,7 +37,7 @@ ctx.lineWidth=3;
 ctx.strokeRect(180,60,580,50);
 
 ctx.fillStyle="white";
-ctx.font="24px Fredoka";
+ctx.font="bold 24px Fredoka";
 ctx.fillText(username,200,95);
 
 // Дата рамка
@@ -41,7 +51,7 @@ ctx.fillStyle="white";
 ctx.font="18px Fredoka";
 ctx.fillText("Joined: "+date,200,148);
 
-// Роли с ТЕМНЫМИ градиентами
+// Роли с ТЁМНЫМИ градиентами
 const roleCheckboxes=document.querySelectorAll(".roles input[type='checkbox']");
 const selectedRoles=Array.from(roleCheckboxes).filter(chk=>chk.checked).map(chk=>chk.value);
 
@@ -51,78 +61,36 @@ const badgeHeight=30;
 const badgeGap=10;
 
 selectedRoles.forEach(role=>{
-    let color1, color2, textColor;
+    let color1,color2,textColor;
     switch(role){
-        case "Gold": 
-            color1="#B8860B"; 
-            color2="#FFD700"; 
-            textColor="#FFF8DC";
-            break;
-        case "Silver": 
-            color1="#708090"; 
-            color2="#C0C0C0"; 
-            textColor="#F0F8FF";
-            break;
-        case "Bronze": 
-            color1="#8B4513"; 
-            color2="#CD7F32"; 
-            textColor="#FFE4C4";
-            break;
-        case "Iron": 
-            color1="#2F4F4F"; 
-            color2="#708090"; 
-            textColor="#E0E0E0";
-            break;
-        case "Explorer": 
-            color1="#008B8B"; 
-            color2="#00D4FF"; 
-            textColor="#E0FFFF";
-            break;
-        case "Content Creator Tier 1": 
-            color1="#CC5500"; 
-            color2="#FF7A18"; 
-            textColor="#FFE5CC";
-            break;
-        case "Content Creator Tier 2": 
-            color1="#CC7722"; 
-            color2="#FF9F43"; 
-            textColor="#FFE5CC";
-            break;
-        case "Content Creator Tier 3": 
-            color1="#CC8800"; 
-            color2="#FFA500"; 
-            textColor="#FFF0D0";
-            break;
-        case "Content Creator Tier 4": 
-            color1="#CCAA00"; 
-            color2="#FFD166"; 
-            textColor="#FFF5DD";
-            break;
-        default:
-            color1="#444";
-            color2="#666";
-            textColor="#EEE";
+        case "Gold":color1="#B8860B";color2="#FFD700";textColor="#FFF8DC";break;
+        case "Silver":color1="#708090";color2="#C0C0C0";textColor="#F0F8FF";break;
+        case "Bronze":color1="#8B4513";color2="#CD7F32";textColor="#FFE4C4";break;
+        case "Iron":color1="#2F4F4F";color2="#708090";textColor="#E0E0E0";break;
+        case "Explorer":color1="#008B8B";color2="#00D4FF";textColor="#E0FFFF";break;
+        case "Content Creator Tier 1":color1="#CC5500";color2="#FF7A18";textColor="#FFE5CC";break;
+        case "Content Creator Tier 2":color1="#CC7722";color2="#FF9F43";textColor="#FFE5CC";break;
+        case "Content Creator Tier 3":color1="#CC8800";color2="#FFA500";textColor="#FFF0D0";break;
+        case "Content Creator Tier 4":color1="#CCAA00";color2="#FFD166";textColor="#FFF5DD";break;
+        default:color1="#444";color2="#666";textColor="#EEE";
     }
     
     const badgeWidth=ctx.measureText(role).width+20;
-    if(xStart+badgeWidth > canvas.width-20){
+    if(xStart+badgeWidth>canvas.width-20){
         xStart=180;
         yStart+=badgeHeight+badgeGap;
     }
     
-    // Рамка бейджа
     ctx.strokeStyle=color2;
     ctx.lineWidth=2;
     ctx.strokeRect(xStart,yStart,badgeWidth,badgeHeight);
     
-    // Фон бейджа с градиентом
     const grad=ctx.createLinearGradient(xStart,yStart,xStart+badgeWidth,yStart+badgeHeight);
     grad.addColorStop(0,color1);
     grad.addColorStop(1,color2);
     ctx.fillStyle=grad;
     ctx.fillRect(xStart,yStart,badgeWidth,badgeHeight);
     
-    // Текст роли
     ctx.fillStyle=textColor;
     ctx.font="bold 14px Fredoka";
     ctx.fillText(role,xStart+10,yStart+20);
@@ -130,9 +98,9 @@ selectedRoles.forEach(role=>{
     xStart+=badgeWidth+10;
 });
 
-// Функция для безопасного рисования
+// Функция для безопасного рисования изображений
 function drawImageSafe(src,x,y,w,h,clipCircle=false,callback){
-     const img=new Image();
+    const img=new Image();
     img.crossOrigin="anonymous";
     img.src=src;
     img.onload=function(){
@@ -140,24 +108,24 @@ function drawImageSafe(src,x,y,w,h,clipCircle=false,callback){
             ctx.save();
             ctx.beginPath();
             ctx.arc(x+w/2,y+h/2,w/2,0,Math.PI*2);
-             ctx.closePath();
+            ctx.closePath();
             ctx.clip();
         }
         ctx.drawImage(img,x,y,w,h);
-        if(clipCircle) ctx.restore();
-        if(callback) callback();
+        if(clipCircle)ctx.restore();
+        if(callback)callback();
     };
     img.onerror=function(){
-        if(callback) callback();
+        if(callback)callback();
     };
 }
 
-// Аватар слева С РАМКОЙ
+// 🔲 Аватар слева С РАМКОЙ
 const avatarInput=document.getElementById("avatar");
 if(avatarInput.files[0]){
     const reader=new FileReader();
     reader.onload=function(e){
-        // Сначала рисуем рамку вокруг аватара
+        // Сначала рисуем оранжевую рамку вокруг аватара
         ctx.save();
         ctx.beginPath();
         ctx.arc(90,130,72,0,Math.PI*2);
@@ -169,9 +137,9 @@ if(avatarInput.files[0]){
         
         drawImageSafe(e.target.result,20,60,140,140,true,drawLogoAndQR);
     };
-     reader.readAsDataURL(avatarInput.files[0]);
+    reader.readAsDataURL(avatarInput.files[0]);
 }else{
-    // Рисуем рамку для placeholder
+    // Рамка для placeholder
     ctx.save();
     ctx.beginPath();
     ctx.arc(90,130,72,0,Math.PI*2);
@@ -180,13 +148,30 @@ if(avatarInput.files[0]){
     ctx.lineWidth=4;
     ctx.stroke();
     ctx.restore();
+    
+    // Placeholder аватар
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(90,130,68,0,Math.PI*2);
+    ctx.closePath();
+    ctx.clip();
+    ctx.fillStyle="#1a1b29";
+    ctx.fillRect(20,60,140,140);
+    ctx.fillStyle="#ff7a18";
+    ctx.font="bold 50px Fredoka";
+    ctx.textAlign="center";
+    ctx.fillText("👤",90,140);
+    ctx.textAlign="start";
+    ctx.restore();
+    
     drawLogoAndQR();
 }
 
 function drawLogoAndQR(){
-    // Логотип ORO справа сверху
+    // 🟠 Логотип ORO справа сверху (исправленная ссылка!)
     drawImageSafe("https://ltdfoto.ru/images/2026/03/12/ORO21937ecdce0bb501.png",650,20,120,60);
-    // QR код справа снизу
+    
+    // 📱 QR код справа снизу
     drawImageSafe("https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=https://getoro.xyz",665,240,110,110);
     
     // Подпись под QR
@@ -199,11 +184,11 @@ function drawLogoAndQR(){
 }
 }
 
-// Скачать
+// Скачать карточку
 function downloadCard(){
-const canvas=document.getElementById("cardCanvas");
-const link=document.createElement("a");
-link.download="oro-card.png";
-link.href=canvas.toDataURL();
-link.click();
+    const canvas=document.getElementById("cardCanvas");
+    const link=document.createElement("a");
+    link.download="oro-card.png";
+    link.href=canvas.toDataURL();
+    link.click();
 }
