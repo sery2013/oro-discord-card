@@ -1,274 +1,236 @@
 body {
-background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%); 
-font-family: 'Fredoka', Arial, sans-serif; 
-color: white; 
-margin: 0; 
-padding: 0; 
-min-height: 100vh; 
-display: flex; 
-flex-direction: column;
-
+    /* Новый живой градиент: глубокий синий и теплый акцент в стиле ORO */
+    background: radial-gradient(circle at top right, #161625, #0a0a0f), 
+                radial-gradient(circle at bottom left, #2c1a0a, #0a0a0f);
+    background-attachment: fixed;
+    font-family: 'Fredoka', Arial, sans-serif;
+    color: white;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* 🔥 Рамка для заголовка */
 .header-frame {
-width: 100%; 
-max-width: 1200px; 
-margin: 20px auto; 
-padding: 0 20px; 
-box-sizing: border-box;
-
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+    box-sizing: border-box;
 }
 
 .title {
-text-align: center; 
-font-size: 36px; 
-margin: 0; 
-padding: 15px 30px; 
-background: linear-gradient(90deg, #ffcc00, #ff7a18); 
--webkit-background-clip: text; 
--webkit-text-fill-color: transparent; 
-background-clip: text; 
-border: 3px solid transparent; 
-border-image: linear-gradient(90deg, #ffcc00, #ff7a18, #ffcc00) 1; 
-border-radius: 16px; 
-box-shadow: 0 0 30px rgba(255, 122, 24, 0.3);
-
+    text-align: center;
+    font-size: 36px;
+    margin: 0;
+    padding: 15px 30px;
+    background: linear-gradient(90deg, #ffcc00, #ff7a18);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    border: 3px solid transparent;
+    border-image: linear-gradient(90deg, #ffcc00, #ff7a18, #ffcc00) 1;
+    border-radius: 16px;
+    box-shadow: 0 0 30px rgba(255, 122, 24, 0.2);
 }
 
 .container {
-display: flex; 
-justify-content: center; 
-align-items: flex-start; 
-gap: 20px; 
-margin: 20px; 
-flex: 1; 
-flex-wrap: wrap;
-
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    margin: 20px;
+    flex: 1;
+    flex-wrap: wrap;
 }
 
 .panel {
-background: linear-gradient(145deg, #1a1b2a, #0f0f1a); 
-padding: 20px; 
-border-radius: 16px; 
-box-shadow: 0 8px 32px rgba(255, 122, 24, 0.15), 0 0 0 1px rgba(255, 122, 24, 0.1); 
-width: 280px; 
-border: 1px solid rgba(255, 122, 24, 0.2);
-
+    /* Стеклянный эффект (Glassmorphism) */
+    background: rgba(20, 21, 33, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 122, 24, 0.15);
+    width: 300px;
+    border: 1px solid rgba(255, 122, 24, 0.1);
 }
 
 .panel input[type="text"],
 .panel input[type="date"] {
-display: block; 
-width: 100%; 
-margin: 8px 0; 
-padding: 10px 12px; 
-border-radius: 8px;
-border: 1px solid rgba(255, 122, 24, 0.3); 
-background: rgba(26, 27, 41, 0.8); 
-color: white; 
-font-family: 'Fredoka', sans-serif; 
-box-sizing: border-box;
+    display: block;
+    width: 100%;
+    margin: 12px 0;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 122, 24, 0.25);
+    background: rgba(10, 10, 15, 0.6);
+    color: white;
+    font-family: 'Fredoka', sans-serif;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
 
+.panel input[type="text"]:focus,
+.panel input[type="date"]:focus {
+    outline: none;
+    border-color: #ff7a18;
+    box-shadow: 0 0 10px rgba(255, 122, 24, 0.2);
 }
 
 .panel input[type="text"]::placeholder,
 .panel input[type="date"]::-webkit-datetime-edit {
-color: rgba(255, 255, 255, 0.6);
-
+    color: rgba(255, 255, 255, 0.5);
 }
 
-/* 🔥 Современный кнопка загрузки аватара */
-.file-upload {
-margin: 12px 0;
+/* Белая иконка календаря */
+.panel input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
 
+/* 🔥 Современная кнопка загрузки аватара */
+.file-upload {
+    margin: 15px 0;
 }
 
 .file-upload input[type="file"] {
-display: none;
-
+    display: none;
 }
 
 .file-upload-btn {
-display: block; 
-width: 100%; 
-padding: 10px 15px; 
-border-radius: 8px; 
-background: linear-gradient(45deg, #ffcc00, #ff7a18); 
-color: black; 
-font-weight: 600; 
-font-family: 'Fredoka', sans-serif; 
-cursor: pointer; 
-text-align: center; 
-transition: transform 0.2s, box-shadow 0.2s; 
-box-sizing: border-box;
-
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    background: linear-gradient(45deg, #ffcc00, #ff7a18);
+    color: #000;
+    font-weight: 600;
+    font-family: 'Fredoka', sans-serif;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    box-shadow: 0 4px 15px rgba(255, 122, 24, 0.2);
 }
 
 .file-upload-btn:hover {
-transform: translateY(-2px); 
-box-shadow: 0 4px 20px rgba(255, 122, 24, 0.4);
-
-}
-
-.file-upload-btn:active {
-transform: translateY(0);
-
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 122, 24, 0.4);
+    filter: brightness(1.1);
 }
 
 .roles {
-margin: 15px 0; 
-max-height: 180px; 
-overflow-y: auto; 
-padding-right: 5px;
-
+    margin: 20px 0;
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 8px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 10px;
 }
 
 .roles::-webkit-scrollbar {
-width: 6px;
-
-}
-
-.roles::-webkit-scrollbar-track {
-background: rgba(255, 255, 255, 0.1); 
-border-radius: 3px;
-
+    width: 5px;
 }
 
 .roles::-webkit-scrollbar-thumb {
-background: linear-gradient(45deg, #ffcc00, #ff7a18); 
-border-radius: 3px;
-
+    background: #ff7a18;
+    border-radius: 10px;
 }
 
 .roles label {
-display: block; 
-margin: 4px 0; 
-cursor: pointer; 
-padding: 4px 8px; 
-border-radius: 4px; 
-transition: background 0.2s;
-
+    display: flex;
+    align-items: center;
+    margin: 6px 0;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    transition: background 0.2s;
+    font-size: 14px;
 }
 
 .roles label:hover {
-background: rgba(255, 122, 24, 0.15);
-
+    background: rgba(255, 122, 24, 0.1);
 }
 
 .roles input[type="checkbox"] {
-margin-right: 8px; 
-accent-color: #ff7a18;
+    margin-right: 10px;
+    accent-color: #ff7a18;
+}
 
+.button-group {
+    display: flex;
+    gap: 10px;
 }
 
 button {
-padding: 12px 20px; 
-margin: 8px 8px 8px 0; 
-border: none; 
-border-radius: 10px; 
-background: linear-gradient(45deg, #ffcc00, #ff7a18); 
-color: black; 
-font-weight: 600;
-font-family: 'Fredoka', sans-serif; 
-cursor: pointer; 
-transition: transform 0.2s, box-shadow 0.2s; 
-font-size: 14px;
-
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(45deg, #ffcc00, #ff7a18);
+    color: black;
+    font-weight: 600;
+    font-family: 'Fredoka', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
 }
 
 button:hover {
-transform: translateY(-2px); 
-box-shadow: 0 6px 25px rgba(255, 122, 24, 0.5);
-
-}
-
-button:active {
-transform: translateY(0);
-
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 122, 24, 0.4);
+    filter: brightness(1.1);
 }
 
 canvas {
-border-radius: 20px; 
-border: 2px solid transparent;
-border-image: linear-gradient(45deg, #ffcc00, #ff7a18, #ffcc00) 1; 
-box-shadow: 0 0 50px rgba(255, 160, 0, 0.35); 
-max-width: 100%; 
-height: auto;
-
+    border-radius: 20px;
+    border: 1px solid rgba(255, 122, 24, 0.3);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    max-width: 100%;
+    height: auto;
+    background-color: #050508;
 }
 
-/* 🔻 Нижний колонтитул */
+/* 🔻 Footer */
 .footer {
-text-align: center; 
-padding: 20px; 
-margin-top: auto; 
-background: rgba(10, 11, 20, 0.8); 
-border-top: 1px solid rgba(255, 122, 24, 0.2);
-
+    text-align: center;
+    padding: 30px;
+    margin-top: auto;
+    background: rgba(5, 5, 8, 0.8);
+    backdrop-filter: blur(5px);
+    border-top: 1px solid rgba(255, 122, 24, 0.1);
 }
 
 .footer p {
-margin: 5px 0; 
-font-size: 14px; 
-color: rgba(255, 255, 255, 0.8);
-
+    margin: 5px 0;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .footer-link {
-color: #ff7a18; 
-text-decoration: none; 
-font-weight: 600; 
-transition: color 0.2s;
-
-}
-
-.footer-link:hover {
-color: #ffcc00; 
-text-decoration: underline;
-
-}
-
-.developer {
-margin-top: 8px;
-
+    color: #ff7a18;
+    text-decoration: none;
+    font-weight: 600;
 }
 
 .twitter-link {
-display: inline-flex; 
-align-items: center; 
-gap: 6px; 
-color: white; 
-text-decoration: none; 
-font-weight: 500; 
-transition: color 0.2s;
-
-}
-
-.twitter-link:hover {
-color: #1da1f2;
-
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: white;
+    text-decoration: none;
 }
 
 .twitter-icon {
-width: 18px; 
-height: 18px; 
-fill: currentColor;
-
+    width: 16px;
+    height: 16px;
 }
 
-/* 📱 Адаптив */
 @media (max-width: 900px) {
-.container {
-flex-direction: column; 
-align-items: center; 
-}
-.panel {
-width: 100%; 
-max-width: 320px; 
-}
-.title {
-font-size: 28px; 
-padding: 12px 20px; 
-}
+    .container { flex-direction: column; align-items: center; }
+    .panel { width: 100%; max-width: 340px; }
 }
