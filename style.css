@@ -12,7 +12,7 @@ body {
     flex-direction: column;
 }
 
-/* 🔥 Рамка для заголовка */
+/* 🔥 Обновленная рамка для заголовка: тонкая и закругленная */
 .header-frame {
     width: 100%;
     max-width: 1200px;
@@ -25,15 +25,29 @@ body {
     text-align: center;
     font-size: 36px;
     margin: 0;
-    padding: 15px 30px;
+    padding: 12px 30px;
+    /* Тонкая градиентная обводка с закруглением через background-clip */
+    background: linear-gradient(#0a0a0f, #0a0a0f) padding-box, 
+                linear-gradient(90deg, #ffcc00, #ff7a18, #ffcc00) border-box;
+    border: 1.5px solid transparent; /* Уменьшенная толщина */
+    border-radius: 12px; /* Закругленные края */
+    box-shadow: 0 0 25px rgba(255, 122, 24, 0.15);
+}
+
+/* Эффект градиентного текста внутри заголовка */
+.title {
+    background-clip: padding-box, border-box;
+    color: transparent;
+    -webkit-background-clip: padding-box, border-box, text;
+}
+
+/* Чтобы текст внутри был градиентным при новом методе рамки */
+.title::before {
+    content: "ORO USER CARD";
     background: linear-gradient(90deg, #ffcc00, #ff7a18);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    border: 3px solid transparent;
-    border-image: linear-gradient(90deg, #ffcc00, #ff7a18, #ffcc00) 1;
-    border-radius: 16px;
-    box-shadow: 0 0 30px rgba(255, 122, 24, 0.2);
 }
 
 .container {
@@ -230,10 +244,6 @@ canvas {
     height: 16px;
 }
 
-@media (max-width: 900px) {
-    .container { flex-direction: column; align-items: center; }
-    .panel { width: 100%; max-width: 340px; }
-}
 /* Контейнер для выравнивания карточки и био */
 .preview-section {
     display: flex;
@@ -273,9 +283,8 @@ canvas {
     box-shadow: 0 0 15px rgba(255, 122, 24, 0.2);
 }
 
-/* Чтобы на мобилках всё шло в один столбец */
 @media (max-width: 900px) {
-    .preview-section {
-        width: 100%;
-    }
+    .container { flex-direction: column; align-items: center; }
+    .panel { width: 100%; max-width: 340px; }
+    .preview-section { width: 100%; }
 }
