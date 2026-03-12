@@ -1,71 +1,87 @@
-function generateCard() {
-    const canvas = document.getElementById("cardCanvas");
-    const ctx = canvas.getContext("2d");
+function generateCard(){
+    const canvas=document.getElementById("cardCanvas");
+    const ctx=canvas.getContext("2d");
+    ctx.clearRect(0,0,canvas.width,canvas.height);
 
-    // Очистка
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Фон
-    const gradient = ctx.createLinearGradient(0,0,canvas.width,canvas.height);
+    // Фон градиент
+    const gradient=ctx.createLinearGradient(0,0,canvas.width,canvas.height);
     gradient.addColorStop(0,'#0b0c14');
     gradient.addColorStop(1,'#1f1f2a');
-    ctx.fillStyle = gradient;
+    ctx.fillStyle=gradient;
     ctx.fillRect(0,0,canvas.width,canvas.height);
 
     // Username и дата с рамками
-    const username = document.getElementById("username").value;
-    const date = document.getElementById("date").value;
+    const username=document.getElementById("username").value;
+    const date=document.getElementById("date").value;
 
     // Username рамка
-    ctx.fillStyle = "#1a1b29";
-    ctx.fillRect(330,200,700,60);
-    ctx.strokeStyle = "#ff7a18";
-    ctx.lineWidth = 3;
-    ctx.strokeRect(330,200,700,60);
+    ctx.fillStyle="#1a1b29";
+    ctx.fillRect(220,50,550,50);
+    ctx.strokeStyle="#ff7a18";
+    ctx.lineWidth=3;
+    ctx.strokeRect(220,50,550,50);
 
-    ctx.fillStyle = "white";
-    ctx.font = "42px Arial";
-    ctx.fillText(username, 350, 240);
+    ctx.fillStyle="white";
+    ctx.font="28px Fredoka";
+    ctx.fillText(username,230,85);
 
     // Дата рамка
-    ctx.fillStyle = "#1a1b29";
-    ctx.fillRect(330,270,700,50);
-    ctx.strokeStyle = "#ffcc00";
-    ctx.lineWidth = 3;
-    ctx.strokeRect(330,270,700,50);
+    ctx.fillStyle="#1a1b29";
+    ctx.fillRect(220,110,550,40);
+    ctx.strokeStyle="#ffcc00";
+    ctx.lineWidth=3;
+    ctx.strokeRect(220,110,550,40);
 
-    ctx.fillStyle = "white";
-    ctx.font = "24px Arial";
-    ctx.fillText("Joined: " + date, 350, 305);
+    ctx.fillStyle="white";
+    ctx.font="20px Fredoka";
+    ctx.fillText("Joined: "+date,230,137);
 
-    // Роли в блоках с градиентом
-    const roleCheckboxes = document.querySelectorAll(".roles input[type='checkbox']");
-    const selectedRoles = Array.from(roleCheckboxes).filter(chk=>chk.checked).map(chk=>chk.value);
+    // Роли в мини-бейджах
+    const roleCheckboxes=document.querySelectorAll(".roles input[type='checkbox']");
+    const selectedRoles=Array.from(roleCheckboxes).filter(chk=>chk.checked).map(chk=>chk.value);
 
-    let yStart = 340;
-    ctx.font = "28px Arial";
-    selectedRoles.forEach((role,i)=>{
-        const x=350;
-        const w=500;
-        const h=40;
-        // Градиент для роли
-        const grad = ctx.createLinearGradient(x,yStart,x+w,yStart+h);
-        grad.addColorStop(0,"#ff7a18");
-        grad.addColorStop(1,"#ffcc00");
+    let xStart=220;
+    let yStart=170;
+    const badgeHeight=30;
+    const badgeGap=10;
+
+    selectedRoles.forEach(role=>{
+        let color="#fff";
+        switch(role){
+            case "Gold": color="#FFD700"; break;
+            case "Silver": color="#C0C0C0"; break;
+            case "Bronze": color="#CD7F32"; break;
+            case "Iron": color="#9A9A9A"; break;
+            case "Explorer": color="#00D4FF"; break;
+            case "Content Creator Tier 1": color="#FF7A18"; break;
+            case "Content Creator Tier 2": color="#FF9F43"; break;
+            case "Content Creator Tier 3": color="#FFA500"; break;
+            case "Content Creator Tier 4": color="#FFD166"; break;
+        }
+        const badgeWidth=ctx.measureText(role).width+20;
+        // Бейдж с градиентом
+        const grad=ctx.createLinearGradient(xStart,yStart,xStart+badgeWidth,yStart+badgeHeight);
+        grad.addColorStop(0,color);
+        grad.addColorStop(1,"#ffffff");
         ctx.fillStyle=grad;
-        ctx.fillRect(x,yStart,w,h);
-        ctx.strokeStyle="#ffffff";
-        ctx.lineWidth=2;
-        ctx.strokeRect(x,yStart,w,h);
+        ctx.fillRect(xStart,yStart,badgeWidth,badgeHeight);
+        ctx.strokeStyle="#000";
+        ctx.lineWidth=1;
+        ctx.strokeRect(xStart,yStart,badgeWidth,badgeHeight);
 
-        ctx.fillStyle="black";
-        ctx.fillText(role,x+10,yStart+28);
+        ctx.fillStyle="#000";
+        ctx.font="18px Fredoka";
+        ctx.fillText(role,xStart+10,yStart+20);
 
-        yStart+=50; // отступ между ролями
+        xStart+=badgeWidth+10;
+        if(xStart>700){ // перенос на следующую строку
+            xStart=220;
+            yStart+=badgeHeight+badgeGap;
+        }
     });
 
     // Функция безопасного рисования изображения
-    function drawImageSafe(src, x, y, w, h, clipCircle=false, callback){
+    function drawImageSafe(src,x,y,w,h,clipCircle=false,callback){
         const img=new Image();
         img.crossOrigin="anonymous";
         img.src=src;
@@ -83,23 +99,21 @@ function generateCard() {
         };
     }
 
-    // Аватар с градиентной рамкой
+    // Аватар слева
     const avatarInput=document.getElementById("avatar");
     if(avatarInput.files[0]){
         const reader=new FileReader();
         reader.onload=function(e){
-            drawImageSafe(e.target.result,60,190,180,180,true,function(){
-                drawLogoAndQR();
-            });
-        }
+            drawImageSafe(e.target.result,50,50,150,150,true,drawLogoAndQR);
+        };
         reader.readAsDataURL(avatarInput.files[0]);
     }else{
         drawLogoAndQR();
     }
 
     function drawLogoAndQR(){
-        drawImageSafe("https://ltdfoto.ru/images/2026/03/12/ORO.png",820,40,220,120);
-        drawImageSafe("https://ltdfoto.ru/images/2026/03/12/qr.png",880,360,160,160);
+        drawImageSafe("https://ltdfoto.ru/images/2026/03/12/ORO.png",650,50,120,60);
+        drawImageSafe("https://ltdfoto.ru/images/2026/03/12/qr.png",650,280,100,100);
     }
 }
 
