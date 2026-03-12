@@ -2,7 +2,6 @@ function generateCard(){
 const canvas=document.getElementById("cardCanvas");
 const ctx=canvas.getContext("2d");
 ctx.clearRect(0,0,canvas.width,canvas.height);
-
 // Фон
 const gradient=ctx.createLinearGradient(0,0,canvas.width,canvas.height);
 gradient.addColorStop(0,'#0b0c14');
@@ -10,24 +9,14 @@ gradient.addColorStop(1,'#1f1f2a');
 ctx.fillStyle=gradient;
 ctx.fillRect(0,0,canvas.width,canvas.height);
 
-// Сетка на фоне
-ctx.strokeStyle='rgba(255,122,24,0.08)';
-ctx.lineWidth=1;
-for(let i=0;i<canvas.width;i+=40){
-    ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,canvas.height);ctx.stroke();
-}
-for(let i=0;i<canvas.height;i+=40){
-    ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(canvas.width,i);ctx.stroke();
-}
-
 // Название карточки сверху
 ctx.fillStyle="white";
-ctx.font="bold 30px Fredoka";
+ctx.font="30px Fredoka";
 ctx.fillText("USER CARD ORO",20,40);
 
 // Username и дата
-const username=document.getElementById("username").value||"Username";
-const date=document.getElementById("date").value||"2026-01-01";
+const username=document.getElementById("username").value;
+const date=document.getElementById("date").value;
 
 // Username рамка
 ctx.fillStyle="#1a1b29";
@@ -37,7 +26,7 @@ ctx.lineWidth=3;
 ctx.strokeRect(180,60,580,50);
 
 ctx.fillStyle="white";
-ctx.font="bold 24px Fredoka";
+ctx.font="24px Fredoka";
 ctx.fillText(username,200,95);
 
 // Дата рамка
@@ -49,9 +38,9 @@ ctx.strokeRect(180,120,580,40);
 
 ctx.fillStyle="white";
 ctx.font="18px Fredoka";
-ctx.fillText("Joined: "+date,200,148);
+ctx.fillText("Joined:  "+date,200,148);
 
-// Роли с ТЁМНЫМИ градиентами
+// Роли
 const roleCheckboxes=document.querySelectorAll(".roles input[type='checkbox']");
 const selectedRoles=Array.from(roleCheckboxes).filter(chk=>chk.checked).map(chk=>chk.value);
 
@@ -74,13 +63,11 @@ selectedRoles.forEach(role=>{
         case "Content Creator Tier 4":color1="#CCAA00";color2="#FFD166";textColor="#FFF5DD";break;
         default:color1="#444";color2="#666";textColor="#EEE";
     }
-    
     const badgeWidth=ctx.measureText(role).width+20;
-    if(xStart+badgeWidth>canvas.width-20){
+    if(xStart+badgeWidth >canvas.width-20){
         xStart=180;
         yStart+=badgeHeight+badgeGap;
     }
-    
     ctx.strokeStyle=color2;
     ctx.lineWidth=2;
     ctx.strokeRect(xStart,yStart,badgeWidth,badgeHeight);
@@ -98,9 +85,9 @@ selectedRoles.forEach(role=>{
     xStart+=badgeWidth+10;
 });
 
-// Функция для безопасного рисования изображений
+// Функция для безопасного рисования
 function drawImageSafe(src,x,y,w,h,clipCircle=false,callback){
-    const img=new Image();
+     const img=new Image();
     img.crossOrigin="anonymous";
     img.src=src;
     img.onload=function(){
@@ -112,11 +99,11 @@ function drawImageSafe(src,x,y,w,h,clipCircle=false,callback){
             ctx.clip();
         }
         ctx.drawImage(img,x,y,w,h);
-        if(clipCircle)ctx.restore();
-        if(callback)callback();
+        if(clipCircle) ctx.restore();
+        if(callback) callback();
     };
     img.onerror=function(){
-        if(callback)callback();
+        if(callback) callback();
     };
 }
 
@@ -125,28 +112,28 @@ const avatarInput=document.getElementById("avatar");
 if(avatarInput.files[0]){
     const reader=new FileReader();
     reader.onload=function(e){
-        // 🔥 Сначала рисуем оранжевую рамку вокруг аватара!
+        // 🔥 РИСУЕМ РАМКУ ВОКРУГ АВАТАРА!
         ctx.save();
         ctx.beginPath();
         ctx.arc(90,130,72,0,Math.PI*2);
         ctx.closePath();
         ctx.strokeStyle="#ff7a18";
         ctx.lineWidth=4;
-        ctx.stroke(); // ← Вот она, рамка!
+        ctx.stroke();
         ctx.restore();
         
         drawImageSafe(e.target.result,20,60,140,140,true,drawLogoAndQR);
     };
-    reader.readAsDataURL(avatarInput.files[0]);
+     reader.readAsDataURL(avatarInput.files[0]);
 }else{
-    // 🔥 Рамка для placeholder аватара
+    // 🔥 РИСУЕМ РАМКУ ДЛЯ PLACEHOLDER!
     ctx.save();
     ctx.beginPath();
     ctx.arc(90,130,72,0,Math.PI*2);
     ctx.closePath();
     ctx.strokeStyle="#ff7a18";
     ctx.lineWidth=4;
-    ctx.stroke(); // ← Рамка для placeholder!
+    ctx.stroke();
     ctx.restore();
     
     // Placeholder аватар
@@ -169,26 +156,25 @@ if(avatarInput.files[0]){
 
 function drawLogoAndQR(){
     // 🟠 Логотип ORO справа сверху (ПРАВИЛЬНАЯ ССЫЛКА!)
-    drawImageSafe("https://ltdfoto.ru/images/2026/03/12/ORO21937ecdce0bb501.png",650,20,120,60);
+    drawImageSafe("https://ltdfoto.ru/images/2026/03/12/ORO.png",650,20,120,60);
     
-    // 📱 QR код справа снизу
-    drawImageSafe("https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=https://getoro.xyz",665,240,110,110);
+    // 📱 QR код ПЕРЕНОСИМ ПОД АВАТАР (слева снизу)
+    drawImageSafe("https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=https://getoro.xyz",20,220,110,110);
     
     // Подпись под QR
     ctx.fillStyle="rgba(255,255,255,0.7)";
     ctx.font="11px Fredoka";
     ctx.textAlign="center";
-    ctx.fillText("Scan to visit",720,235);
-    ctx.fillText("getoro.xyz",720,365);
+    ctx.fillText("Scan to visit",75,215);
+    ctx.fillText("getoro.xyz",75,345);
     ctx.textAlign="start";
 }
 }
-
-// Скачать карточку
+// Скачать
 function downloadCard(){
-    const canvas=document.getElementById("cardCanvas");
-    const link=document.createElement("a");
-    link.download="oro-card.png";
-    link.href=canvas.toDataURL();
-    link.click();
+const canvas=document.getElementById("cardCanvas");
+const link=document.createElement("a");
+link.download="oro-card.png";
+link.href=canvas.toDataURL();
+link.click();
 }
