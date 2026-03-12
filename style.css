@@ -1,7 +1,6 @@
 body {
-    /* Новый живой градиент: глубокий синий и теплый акцент в стиле ORO */
-    background: radial-gradient(circle at top right, #161625, #0a0a0f), 
-                radial-gradient(circle at bottom left, #2c1a0a, #0a0a0f);
+    /* Цвета в стиле getoro.xyz: глубокий синий переходит в более светлый стальной */
+    background: radial-gradient(circle at top right, #25293c, #13151f 70%);
     background-attachment: fixed;
     font-family: 'Fredoka', Arial, sans-serif;
     color: white;
@@ -23,17 +22,15 @@ body {
 
 .title {
     text-align: center;
-    font-size: 36px;
+    font-size: 32px;
     margin: 0;
-    padding: 15px 30px;
+    padding: 12px 25px;
     background: linear-gradient(90deg, #ffcc00, #ff7a18);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    border: 3px solid transparent;
-    border-image: linear-gradient(90deg, #ffcc00, #ff7a18, #ffcc00) 1;
-    border-radius: 16px;
-    box-shadow: 0 0 30px rgba(255, 122, 24, 0.2);
+    border: 2px solid rgba(255, 122, 24, 0.4);
+    border-radius: 12px;
 }
 
 .container {
@@ -47,57 +44,41 @@ body {
 }
 
 .panel {
-    /* Стеклянный эффект (Glassmorphism) */
-    background: rgba(20, 21, 33, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    /* Светлая "стеклянная" панель без черного цвета */
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     padding: 25px;
     border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 122, 24, 0.15);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1);
     width: 300px;
-    border: 1px solid rgba(255, 122, 24, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .panel input[type="text"],
 .panel input[type="date"] {
     display: block;
     width: 100%;
-    margin: 12px 0;
+    margin: 10px 0;
     padding: 12px;
     border-radius: 10px;
-    border: 1px solid rgba(255, 122, 24, 0.25);
-    background: rgba(10, 10, 15, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
     color: white;
     font-family: 'Fredoka', sans-serif;
     box-sizing: border-box;
-    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.panel input[type="text"]:focus,
-.panel input[type="date"]:focus {
+.panel input[type="text"]:focus {
     outline: none;
     border-color: #ff7a18;
-    box-shadow: 0 0 10px rgba(255, 122, 24, 0.2);
+    background: rgba(255, 255, 255, 0.07);
 }
 
-.panel input[type="text"]::placeholder,
-.panel input[type="date"]::-webkit-datetime-edit {
-    color: rgba(255, 255, 255, 0.5);
-}
-
-/* Белая иконка календаря */
+/* Иконка календаря теперь тоже в стиле сайта */
 .panel input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
+    filter: invert(0.8) sepia(1) saturate(5) hue-rotate(15deg);
     cursor: pointer;
-}
-
-/* 🔥 Современная кнопка загрузки аватара */
-.file-upload {
-    margin: 15px 0;
-}
-
-.file-upload input[type="file"] {
-    display: none;
 }
 
 .file-upload-btn {
@@ -106,131 +87,63 @@ body {
     padding: 12px;
     border-radius: 10px;
     background: linear-gradient(45deg, #ffcc00, #ff7a18);
-    color: #000;
+    color: #13151f;
     font-weight: 600;
-    font-family: 'Fredoka', sans-serif;
     cursor: pointer;
     text-align: center;
     transition: all 0.3s ease;
-    box-sizing: border-box;
-    box-shadow: 0 4px 15px rgba(255, 122, 24, 0.2);
 }
 
 .file-upload-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 122, 24, 0.4);
     filter: brightness(1.1);
+    box-shadow: 0 5px 15px rgba(255, 122, 24, 0.3);
 }
 
 .roles {
-    margin: 20px 0;
-    max-height: 200px;
-    overflow-y: auto;
-    padding-right: 8px;
-    background: rgba(0, 0, 0, 0.2);
+    margin: 15px 0;
+    background: rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     padding: 10px;
-}
-
-.roles::-webkit-scrollbar {
-    width: 5px;
-}
-
-.roles::-webkit-scrollbar-thumb {
-    background: #ff7a18;
-    border-radius: 10px;
 }
 
 .roles label {
     display: flex;
     align-items: center;
-    margin: 6px 0;
-    cursor: pointer;
-    padding: 6px;
-    border-radius: 6px;
-    transition: background 0.2s;
+    padding: 5px;
     font-size: 14px;
-}
-
-.roles label:hover {
-    background: rgba(255, 122, 24, 0.1);
-}
-
-.roles input[type="checkbox"] {
-    margin-right: 10px;
-    accent-color: #ff7a18;
-}
-
-.button-group {
-    display: flex;
-    gap: 10px;
+    cursor: pointer;
 }
 
 button {
-    flex: 1;
+    width: 100%;
     padding: 12px;
+    margin-top: 10px;
     border: none;
     border-radius: 10px;
-    background: linear-gradient(45deg, #ffcc00, #ff7a18);
-    color: black;
+    background: white; /* Белая кнопка как акцент на getoro.xyz */
+    color: #13151f;
     font-weight: 600;
-    font-family: 'Fredoka', sans-serif;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-size: 14px;
 }
 
 button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 122, 24, 0.4);
-    filter: brightness(1.1);
+    background: #ff7a18;
+    color: white;
 }
 
 canvas {
     border-radius: 20px;
-    border: 1px solid rgba(255, 122, 24, 0.3);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+    background-color: #13151f;
     max-width: 100%;
-    height: auto;
-    background-color: #050508;
 }
 
-/* 🔻 Footer */
 .footer {
     text-align: center;
     padding: 30px;
-    margin-top: auto;
-    background: rgba(5, 5, 8, 0.8);
-    backdrop-filter: blur(5px);
-    border-top: 1px solid rgba(255, 122, 24, 0.1);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 13px;
 }
 
-.footer p {
-    margin: 5px 0;
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.6);
-}
-
-.footer-link {
-    color: #ff7a18;
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.twitter-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: white;
-    text-decoration: none;
-}
-
-.twitter-icon {
-    width: 16px;
-    height: 16px;
-}
-
-@media (max-width: 900px) {
-    .container { flex-direction: column; align-items: center; }
-    .panel { width: 100%; max-width: 340px; }
-}
+.footer-link { color: #ff7a18; text-decoration: none; }
