@@ -2,12 +2,12 @@ function generateCard() {
     const canvas = document.getElementById("cardCanvas");
     const ctx = canvas.getContext("2d");
 
-    // очистка и фон
+    // Очистка и фон
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "#0b0c14";
     ctx.fillRect(0, 0, 1100, 550);
 
-    // username и дата
+    // Username и дата
     const username = document.getElementById("username").value;
     const date = document.getElementById("date").value;
 
@@ -18,7 +18,7 @@ function generateCard() {
     ctx.font = "24px Arial";
     ctx.fillText("Joined: " + date, 350, 340);
 
-    // роли (несколько)
+    // Роли (множественный выбор)
     const roleSelect = document.getElementById("role");
     const selectedRoles = Array.from(roleSelect.selectedOptions).map(opt => opt.value);
 
@@ -35,49 +35,53 @@ function generateCard() {
 
         ctx.fillStyle = roleColor;
         ctx.fillText(role, 350, yStart);
-        yStart += 40; // расстояние между ролями
+        yStart += 40;
     });
 
     ctx.fillStyle = "white";
 
-    // функция рисования изображений после загрузки
-    function drawImage(src, x, y, w, h, clipCircle = false) {
-        const img = new Image();
-        img.crossOrigin = "anonymous";
-        img.src = src;
-        img.onload = function () {
-            if (clipCircle) {
+    // Асинхронная функция для загрузки изображения
+    function loadImage(src) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.src = src;
+            img.onload = () => resolve(img);
+        });
+    }
+
+    async function drawImages() {
+        // Логотип
+        const logo = await loadImage("https://ltdfoto.ru/images/2026/03/12/ORO.png");
+        ctx.drawImage(logo, 820, 40, 220, 120);
+
+        // QR
+        const qr = await loadImage("https://ltdfoto.ru/images/2026/03/12/qr.png");
+        ctx.drawImage(qr, 880, 360, 160, 160);
+
+        // Аватар (если загружен)
+        const avatarInput = document.getElementById("avatar");
+        if (avatarInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = async function (e) {
+                const avatar = await loadImage(e.target.result);
+
                 ctx.save();
                 ctx.beginPath();
-                ctx.arc(x + w/2, y + h/2, w/2, 0, Math.PI * 2);
+                ctx.arc(150, 280, 90, 0, Math.PI * 2);
                 ctx.closePath();
                 ctx.clip();
-            }
-
-            ctx.drawImage(img, x, y, w, h);
-
-            if (clipCircle) ctx.restore();
-        };
+                ctx.drawImage(avatar, 60, 190, 180, 180);
+                ctx.restore();
+            };
+            reader.readAsDataURL(avatarInput.files[0]);
+        }
     }
 
-    // аватар
-    const avatarInput = document.getElementById("avatar");
-    if (avatarInput.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function () {
-            drawImage(reader.result, 60, 190, 180, 180, true);
-        };
-        reader.readAsDataURL(avatarInput.files[0]);
-    }
-
-    // логотип
-    drawImage("https://ltdfoto.ru/images/2026/03/12/ORO.png", 820, 40, 220, 120);
-
-    // QR
-    drawImage("https://ltdfoto.ru/images/2026/03/12/qr.png", 880, 360, 160, 160);
+    drawImages();
 }
 
-// download
+// Download
 function downloadCard() {
     const canvas = document.getElementById("cardCanvas");
     const link = document.createElement("a");
