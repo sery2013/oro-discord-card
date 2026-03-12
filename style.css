@@ -12,42 +12,33 @@ body {
     flex-direction: column;
 }
 
-/* 🔥 Обновленная рамка для заголовка: тонкая и закругленная */
+/* 🔥 Рамка для заголовка: тонкая и закругленная */
 .header-frame {
     width: 100%;
     max-width: 1200px;
     margin: 20px auto;
     padding: 0 20px;
     box-sizing: border-box;
+    text-align: center;
 }
 
 .title {
-    text-align: center;
+    display: inline-block;
     font-size: 36px;
     margin: 0;
     padding: 12px 30px;
-    /* Тонкая градиентная обводка с закруглением через background-clip */
+    /* Метод создания тонкой закругленной рамки через background-clip */
     background: linear-gradient(#0a0a0f, #0a0a0f) padding-box, 
                 linear-gradient(90deg, #ffcc00, #ff7a18, #ffcc00) border-box;
-    border: 1.5px solid transparent; /* Уменьшенная толщина */
-    border-radius: 12px; /* Закругленные края */
+    border: 1.5px solid transparent; /* Тонкая линия */
+    border-radius: 12px; /* Закругление */
     box-shadow: 0 0 25px rgba(255, 122, 24, 0.15);
-}
-
-/* Эффект градиентного текста внутри заголовка */
-.title {
-    background-clip: padding-box, border-box;
-    color: transparent;
-    -webkit-background-clip: padding-box, border-box, text;
-}
-
-/* Чтобы текст внутри был градиентным при новом методе рамки */
-.title::before {
-    content: "ORO USER CARD";
-    background: linear-gradient(90deg, #ffcc00, #ff7a18);
+    
+    /* Делаем сам текст градиентным */
+    background-image: linear-gradient(90deg, #ffcc00, #ff7a18);
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     background-clip: text;
+    color: transparent;
 }
 
 .container {
