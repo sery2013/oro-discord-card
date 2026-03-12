@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>ORO User Card</title>
+<title>ORO Discord Card</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -10,24 +10,24 @@
 <h1 class="title">ORO USER CARD</h1>
 
 <div class="panel">
-    <input type="file" id="avatar">
-    <input type="text" id="username" placeholder="Discord Username">
-    <input type="date" id="date">
+  <input type="file" id="avatar" accept="image/*">
+  <input type="text" id="username" placeholder="Discord Username">
+  <input type="date" id="date">
 
-    <select id="role" multiple size="8">
-        <option>Content Creator Tier 1</option>
-        <option>Content Creator Tier 2</option>
-        <option>Content Creator Tier 3</option>
-        <option>Content Creator Tier 4</option>
-        <option>Explorer</option>
-        <option>Iron</option>
-        <option>Bronze</option>
-        <option>Silver</option>
-        <option>Gold</option>
-    </select>
+  <div class="roles">
+    <label><input type="checkbox" value="Content Creator Tier 1"> Content Creator Tier 1</label>
+    <label><input type="checkbox" value="Content Creator Tier 2"> Content Creator Tier 2</label>
+    <label><input type="checkbox" value="Content Creator Tier 3"> Content Creator Tier 3</label>
+    <label><input type="checkbox" value="Content Creator Tier 4"> Content Creator Tier 4</label>
+    <label><input type="checkbox" value="Explorer"> Explorer</label>
+    <label><input type="checkbox" value="Iron"> Iron</label>
+    <label><input type="checkbox" value="Bronze"> Bronze</label>
+    <label><input type="checkbox" value="Silver"> Silver</label>
+    <label><input type="checkbox" value="Gold"> Gold</label>
+  </div>
 
-    <button onclick="generateCard()">Generate Card</button>
-    <button onclick="downloadCard()">Download</button>
+  <button onclick="generateCard()">Generate Card</button>
+  <button onclick="downloadCard()">Download</button>
 </div>
 
 <canvas id="cardCanvas" width="1100" height="550"></canvas>
