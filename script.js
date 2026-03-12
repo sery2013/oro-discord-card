@@ -88,7 +88,7 @@ selectedRoles.forEach(role=>{
     xStart+=badgeWidth+10;
 });
 
-// Функция для безопасного рисования
+// Функция для безопасного рисования изображений
 function drawImageSafe(src,x,y,w,h,clipCircle=false,callback){
     const img=new Image();
     img.crossOrigin="anonymous";
@@ -106,53 +106,67 @@ function drawImageSafe(src,x,y,w,h,clipCircle=false,callback){
         if(callback)callback();
     };
     img.onerror=function(){
-        console.log("Image load error:",src);
+        console.error("Image load error:",src);
         if(callback)callback();
     };
 }
 
-// 🔲 Аватар слева С РАМКОЙ
+// 🔲 Квадратная рамка вокруг аватара
 const avatarInput=document.getElementById("avatar");
+const avatarX=20;
+const avatarY=60;
+const avatarSize=140;
+const borderRadius=15; // Закругление углов рамки
+
 if(avatarInput.files[0]){
     const reader=new FileReader();
     reader.onload=function(e){
-        // 🔥 РИСУЕМ РАМКУ ПЕРЕД аватаром!
+        // 🔥 РИСУЕМ КВАДРАТНУЮ РАМКУ с закруглением!
         ctx.save();
         ctx.beginPath();
-        ctx.arc(90,130,72,0,Math.PI*2);
+        ctx.roundRect(avatarX,avatarY,avatarSize,avatarSize,borderRadius);
         ctx.closePath();
         ctx.strokeStyle="#ff7a18";
         ctx.lineWidth=4;
         ctx.stroke();
         ctx.restore();
         
-        drawImageSafe(e.target.result,20,60,140,140,true,drawLogoAndQR);
+        // Рисуем аватар с закруглением
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(avatarX+4,avatarY+4,avatarSize-8,avatarSize-8,borderRadius-2);
+        ctx.closePath();
+        ctx.clip();
+        drawImageSafe(e.target.result,avatarX,avatarY,avatarSize,avatarSize,false,drawLogoAndQR);
+        ctx.restore();
     };
     reader.readAsDataURL(avatarInput.files[0]);
 }else{
-    // 🔥 РИСУЕМ РАМКУ для placeholder!
+    // 🔥 РИСУЕМ КВАДРАТНУЮ РАМКУ для placeholder!
     ctx.save();
     ctx.beginPath();
-    ctx.arc(90,130,72,0,Math.PI*2);
+    ctx.roundRect(avatarX,avatarY,avatarSize,avatarSize,borderRadius);
     ctx.closePath();
     ctx.strokeStyle="#ff7a18";
     ctx.lineWidth=4;
     ctx.stroke();
     ctx.restore();
     
-    // Placeholder
+    // Placeholder аватар
     ctx.save();
     ctx.beginPath();
-    ctx.arc(90,130,68,0,Math.PI*2);
+    ctx.roundRect(avatarX+4,avatarY+4,avatarSize-8,avatarSize-8,borderRadius-2);
     ctx.closePath();
     ctx.clip();
     ctx.fillStyle="#1a1b29";
-    ctx.fillRect(20,60,140,140);
+    ctx.fillRect(avatarX,avatarY,avatarSize,avatarSize);
     ctx.fillStyle="#ff7a18";
     ctx.font="bold 50px Fredoka";
     ctx.textAlign="center";
-    ctx.fillText("👤",90,140);
+    ctx.textBaseline="middle";
+    ctx.fillText("👤",avatarX+avatarSize/2,avatarY+avatarSize/2);
     ctx.textAlign="start";
+    ctx.textBaseline="alphabetic";
     ctx.restore();
     
     drawLogoAndQR();
@@ -164,7 +178,7 @@ function drawLogoAndQR(){
     
     // 📱 QR код ВНИЗУ с отступом 10px от нижней рамки
     const qrSize=120;
-    const qrY=canvas.height-10-qrSize; // 400-10-120=270
+    const qrY=canvas.height-10-qrSize;
     drawImageSafe("https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://getoro.xyz",650,qrY,qrSize,qrSize);
     
     // Подпись под QR
@@ -177,7 +191,7 @@ function drawLogoAndQR(){
 }
 }
 
-// Скачать
+// Скачать карточку
 function downloadCard(){
 const canvas=document.getElementById("cardCanvas");
 const link=document.createElement("a");
