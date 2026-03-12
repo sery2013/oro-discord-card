@@ -100,10 +100,6 @@ body {
     box-shadow: 0 4px 20px rgba(255, 122, 24, 0.4);
 }
 
-.file-upload-btn:active {
-    transform: translateY(0);
-}
-
 .roles {
     margin: 15px 0;
     max-height: 180px;
@@ -162,10 +158,6 @@ button:hover {
     box-shadow: 0 6px 25px rgba(255, 122, 24, 0.5);
 }
 
-button:active {
-    transform: translateY(0);
-}
-
 canvas {
     border-radius: 20px;
     border: 2px solid transparent;
@@ -175,7 +167,6 @@ canvas {
     height: auto;
 }
 
-/* 🔻 Footer */
 .footer {
     text-align: center;
     padding: 20px;
@@ -194,16 +185,6 @@ canvas {
     color: #ff7a18;
     text-decoration: none;
     font-weight: 600;
-    transition: color 0.2s;
-}
-
-.footer-link:hover {
-    color: #ffcc00;
-    text-decoration: underline;
-}
-
-.developer {
-    margin-top: 8px;
 }
 
 .twitter-link {
@@ -212,12 +193,6 @@ canvas {
     gap: 6px;
     color: white;
     text-decoration: none;
-    font-weight: 500;
-    transition: color 0.2s;
-}
-
-.twitter-link:hover {
-    color: #1da1f2;
 }
 
 .twitter-icon {
@@ -226,7 +201,6 @@ canvas {
     fill: currentColor;
 }
 
-/* 📱 Адаптив */
 @media (max-width: 900px) {
     .container {
         flex-direction: column;
@@ -235,9 +209,5 @@ canvas {
     .panel {
         width: 100%;
         max-width: 320px;
-    }
-    .title {
-        font-size: 28px;
-        padding: 12px 20px;
     }
 }
