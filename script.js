@@ -2,6 +2,7 @@ function generateCard(){
 const canvas=document.getElementById("cardCanvas");
 const ctx=canvas.getContext("2d");
 ctx.clearRect(0,0,canvas.width,canvas.height);
+
 // Фон
 const gradient=ctx.createLinearGradient(0,0,canvas.width,canvas.height);
 gradient.addColorStop(0,'#0b0c14');
@@ -11,12 +12,12 @@ ctx.fillRect(0,0,canvas.width,canvas.height);
 
 // Название карточки сверху
 ctx.fillStyle="white";
-ctx.font="30px Fredoka";
+ctx.font="bold 30px Fredoka";
 ctx.fillText("USER CARD ORO",20,40);
 
 // Username и дата
-const username=document.getElementById("username").value;
-const date=document.getElementById("date").value;
+const username=document.getElementById("username").value||"Username";
+const date=document.getElementById("date").value||"2026-01-01";
 
 // Username рамка
 ctx.fillStyle="#1a1b29";
@@ -26,7 +27,7 @@ ctx.lineWidth=3;
 ctx.strokeRect(180,60,580,50);
 
 ctx.fillStyle="white";
-ctx.font="24px Fredoka";
+ctx.font="bold 24px Fredoka";
 ctx.fillText(username,200,95);
 
 // Дата рамка
@@ -38,9 +39,9 @@ ctx.strokeRect(180,120,580,40);
 
 ctx.fillStyle="white";
 ctx.font="18px Fredoka";
-ctx.fillText("Joined:  "+date,200,148);
+ctx.fillText("Joined: "+date,200,148);
 
-// Роли
+// Роли с тёмными градиентами
 const roleCheckboxes=document.querySelectorAll(".roles input[type='checkbox']");
 const selectedRoles=Array.from(roleCheckboxes).filter(chk=>chk.checked).map(chk=>chk.value);
 
@@ -63,11 +64,13 @@ selectedRoles.forEach(role=>{
         case "Content Creator Tier 4":color1="#CCAA00";color2="#FFD166";textColor="#FFF5DD";break;
         default:color1="#444";color2="#666";textColor="#EEE";
     }
+    
     const badgeWidth=ctx.measureText(role).width+20;
-    if(xStart+badgeWidth >canvas.width-20){
+    if(xStart+badgeWidth>canvas.width-20){
         xStart=180;
         yStart+=badgeHeight+badgeGap;
     }
+    
     ctx.strokeStyle=color2;
     ctx.lineWidth=2;
     ctx.strokeRect(xStart,yStart,badgeWidth,badgeHeight);
@@ -87,7 +90,7 @@ selectedRoles.forEach(role=>{
 
 // Функция для безопасного рисования
 function drawImageSafe(src,x,y,w,h,clipCircle=false,callback){
-     const img=new Image();
+    const img=new Image();
     img.crossOrigin="anonymous";
     img.src=src;
     img.onload=function(){
@@ -99,11 +102,12 @@ function drawImageSafe(src,x,y,w,h,clipCircle=false,callback){
             ctx.clip();
         }
         ctx.drawImage(img,x,y,w,h);
-        if(clipCircle) ctx.restore();
-        if(callback) callback();
+        if(clipCircle)ctx.restore();
+        if(callback)callback();
     };
     img.onerror=function(){
-        if(callback) callback();
+        console.log("Image load error:",src);
+        if(callback)callback();
     };
 }
 
@@ -112,7 +116,7 @@ const avatarInput=document.getElementById("avatar");
 if(avatarInput.files[0]){
     const reader=new FileReader();
     reader.onload=function(e){
-        // 🔥 РИСУЕМ РАМКУ ВОКРУГ АВАТАРА!
+        // 🔥 РИСУЕМ РАМКУ ПЕРЕД аватаром!
         ctx.save();
         ctx.beginPath();
         ctx.arc(90,130,72,0,Math.PI*2);
@@ -124,9 +128,9 @@ if(avatarInput.files[0]){
         
         drawImageSafe(e.target.result,20,60,140,140,true,drawLogoAndQR);
     };
-     reader.readAsDataURL(avatarInput.files[0]);
+    reader.readAsDataURL(avatarInput.files[0]);
 }else{
-    // 🔥 РИСУЕМ РАМКУ ДЛЯ PLACEHOLDER!
+    // 🔥 РИСУЕМ РАМКУ для placeholder!
     ctx.save();
     ctx.beginPath();
     ctx.arc(90,130,72,0,Math.PI*2);
@@ -136,7 +140,7 @@ if(avatarInput.files[0]){
     ctx.stroke();
     ctx.restore();
     
-    // Placeholder аватар
+    // Placeholder
     ctx.save();
     ctx.beginPath();
     ctx.arc(90,130,68,0,Math.PI*2);
@@ -155,21 +159,24 @@ if(avatarInput.files[0]){
 }
 
 function drawLogoAndQR(){
-    // 🟠 Логотип ORO справа сверху (ПРАВИЛЬНАЯ ССЫЛКА!)
+    // 🟠 Логотип ORO справа сверху
     drawImageSafe("https://ltdfoto.ru/images/2026/03/12/ORO.png",650,20,120,60);
     
-    // 📱 QR код ПЕРЕНОСИМ ПОД АВАТАР (слева снизу)
-    drawImageSafe("https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=https://getoro.xyz",20,220,110,110);
+    // 📱 QR код ВНИЗУ с отступом 10px от нижней рамки
+    const qrSize=120;
+    const qrY=canvas.height-10-qrSize; // 400-10-120=270
+    drawImageSafe("https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://getoro.xyz",650,qrY,qrSize,qrSize);
     
     // Подпись под QR
     ctx.fillStyle="rgba(255,255,255,0.7)";
     ctx.font="11px Fredoka";
     ctx.textAlign="center";
-    ctx.fillText("Scan to visit",75,215);
-    ctx.fillText("getoro.xyz",75,345);
+    ctx.fillText("Scan to visit",710,qrY-5);
+    ctx.fillText("getoro.xyz",710,canvas.height-5);
     ctx.textAlign="start";
 }
 }
+
 // Скачать
 function downloadCard(){
 const canvas=document.getElementById("cardCanvas");
