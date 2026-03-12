@@ -125,28 +125,28 @@ const avatarInput=document.getElementById("avatar");
 if(avatarInput.files[0]){
     const reader=new FileReader();
     reader.onload=function(e){
-        // Сначала рисуем оранжевую рамку вокруг аватара
+        // 🔥 Сначала рисуем оранжевую рамку вокруг аватара!
         ctx.save();
         ctx.beginPath();
         ctx.arc(90,130,72,0,Math.PI*2);
         ctx.closePath();
         ctx.strokeStyle="#ff7a18";
         ctx.lineWidth=4;
-        ctx.stroke();
+        ctx.stroke(); // ← Вот она, рамка!
         ctx.restore();
         
         drawImageSafe(e.target.result,20,60,140,140,true,drawLogoAndQR);
     };
     reader.readAsDataURL(avatarInput.files[0]);
 }else{
-    // Рамка для placeholder
+    // 🔥 Рамка для placeholder аватара
     ctx.save();
     ctx.beginPath();
     ctx.arc(90,130,72,0,Math.PI*2);
     ctx.closePath();
     ctx.strokeStyle="#ff7a18";
     ctx.lineWidth=4;
-    ctx.stroke();
+    ctx.stroke(); // ← Рамка для placeholder!
     ctx.restore();
     
     // Placeholder аватар
@@ -168,7 +168,7 @@ if(avatarInput.files[0]){
 }
 
 function drawLogoAndQR(){
-    // 🟠 Логотип ORO справа сверху (исправленная ссылка!)
+    // 🟠 Логотип ORO справа сверху (ПРАВИЛЬНАЯ ССЫЛКА!)
     drawImageSafe("https://ltdfoto.ru/images/2026/03/12/ORO21937ecdce0bb501.png",650,20,120,60);
     
     // 📱 QR код справа снизу
