@@ -31,7 +31,7 @@ function generateCard() {
         ctx.font = "bold 30px Fredoka";
         ctx.shadowColor = "#ff7a18";
         ctx.shadowBlur = 15;
-        ctx.fillText("USER CARD ORO", 25, 45);
+        ctx.fillText("USER CARD", 25, 45);
         ctx.restore();
 
         ctx.strokeStyle = "rgba(255, 122, 24, 0.5)";
