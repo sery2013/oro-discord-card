@@ -3,7 +3,7 @@ function generateCard() {
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // 1. ФОН в стиле getoro.xyz
+    // 1. ФОН (Глубокий радиальный градиент)
     const bgGrad = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, 50, canvas.width / 2, canvas.height / 2, 500);
     bgGrad.addColorStop(0, '#11121d');
     bgGrad.addColorStop(1, '#050508');
@@ -17,9 +17,8 @@ function generateCard() {
 
     const avX = 25, avY = 70, avS = 140, radius = 18;
 
-    // Функция, которая рисует всё остальное ПОСЛЕ загрузки логотипа
     function drawFinalLayer() {
-        // Название
+        // Заголовок
         ctx.save();
         ctx.shadowColor = "rgba(255, 122, 24, 0.5)";
         ctx.shadowBlur = 10;
@@ -31,7 +30,7 @@ function generateCard() {
         const username = document.getElementById("username").value || "sery2013";
         const date = document.getElementById("date").value || "2026-03-05";
 
-        // Username блок
+        // Поле Username
         ctx.save();
         ctx.shadowColor = "#ff7a18";
         ctx.shadowBlur = 8;
@@ -44,31 +43,31 @@ function generateCard() {
         
         ctx.fillStyle = "white";
         ctx.font = "bold 24px Fredoka";
-        ctx.fillText(username, 205, 102);
+        ctx.fillText(username, 205, 98);
 
-        // Дата блок
+        // Поле даты
         ctx.strokeStyle = "#ffcc00";
         ctx.fillStyle = "rgba(15, 15, 20, 0.8)";
-        ctx.strokeRect(185, 130, 580, 40);
-        ctx.fillRect(185, 130, 580, 40);
+        ctx.strokeRect(185, 125, 580, 40);
+        ctx.fillRect(185, 125, 580, 40);
         ctx.fillStyle = "#aaa";
         ctx.font = "18px Fredoka";
-        ctx.fillText("Joined: " + date, 205, 157);
+        ctx.fillText("Joined: " + date, 205, 152);
 
-        // --- РОЛИ С РАЗНЫМИ ЦВЕТАМИ ---
+        // --- РОЛИ С УНИКАЛЬНЫМИ ЦВЕТАМИ ---
         const roleCheckboxes = document.querySelectorAll(".roles input[type='checkbox']");
         const selectedRoles = Array.from(roleCheckboxes).filter(chk => chk.checked).map(chk => chk.value);
         let xStart = 185, yStart = 185;
 
         selectedRoles.forEach(role => {
             let c1, c2;
-            // Уникальные цвета для каждой роли
             if (role === "Gold") { c1="#B8860B"; c2="#FFD700"; }
             else if (role === "Silver") { c1="#434343"; c2="#C0C0C0"; }
             else if (role === "Explorer") { c1="#008B8B"; c2="#00D4FF"; }
             else if (role.includes("Tier 1")) { c1="#CC5500"; c2="#FF7A18"; }
-            else if (role.includes("Tier 2")) { c1="#CC7722"; c2="#FF9F43"; }
-            else if (role.includes("Tier 3")) { c1="#9e6a00"; c2="#ffcc00"; }
+            else if (role.includes("Tier 2")) { c1="#b35900"; c2="#ff8c1a"; }
+            else if (role.includes("Tier 3")) { c1="#996600"; c2="#ffaa00"; }
+            else if (role.includes("Tier 4")) { c1="#808000"; c2="#bdb76b"; }
             else { c1="#2a2b3d"; c2="#4a4b5d"; }
 
             ctx.font = "bold 13px Fredoka";
@@ -82,17 +81,17 @@ function generateCard() {
             ctx.roundRect(xStart, yStart, bWidth, 30, 6);
             ctx.fill();
             ctx.fillStyle = "white";
-            ctx.fillText(role, xStart + 13, yStart + 21);
+            ctx.fillText(role, xStart + 13, yStart + 20);
             xStart += bWidth + 10;
         });
 
-        // ЛОГОТИП ORO (Загружаем и рисуем в самом конце)
+        // ЛОГОТИП ORO (GitHub Direct Link)
         const logo = new Image();
         logo.crossOrigin = "anonymous";
         logo.onload = function() {
             ctx.drawImage(logo, 630, 310, 130, 65);
         };
-        logo.src = "https://ltdfoto.ru/images/2026/03/12/ORO.png";
+        logo.src = "https://github.com/sery2013/oro-discord-card/blob/main/ORO.png?raw=true";
 
         // QR КОД
         const qr = new Image();
@@ -111,7 +110,6 @@ function generateCard() {
     // РИСУЕМ АВАТАР
     const avatarInput = document.getElementById("avatar");
     
-    // Рамка аватара
     ctx.save();
     ctx.shadowColor = "#ff7a18";
     ctx.shadowBlur = 12;
