@@ -10,7 +10,7 @@ function generateCard() {
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // 2. ОЧЕНЬ ПРОЗРАЧНЫЕ СИМВОЛЫ (0.03)
+    // 2. УЛЬТРА-ПРОЗРАЧНЫЕ СИМВОЛЫ (0.03)
     ctx.save();
     ctx.fillStyle = "rgba(255, 122, 24, 0.03)";
     ctx.font = "bold 35px Fredoka";
@@ -22,7 +22,7 @@ function generateCard() {
     }
     ctx.restore();
 
-    // 3. УЛЬТРАТОНКАЯ ВНЕШНЯЯ РАМКА
+    // 3. ВНЕШНЯЯ ТОНКАЯ РАМКА КАРТОЧКИ
     ctx.strokeStyle = "rgba(255, 122, 24, 0.3)";
     ctx.lineWidth = 1;
     ctx.strokeRect(5, 5, canvas.width - 10, canvas.height - 10);
@@ -30,7 +30,7 @@ function generateCard() {
     const avX = 25, avY = 70, avS = 140, radius = 18;
 
     function drawFinalLayer() {
-        // Заголовок без ORO
+        // Заголовок
         ctx.fillStyle = "white";
         ctx.font = "bold 30px Fredoka";
         ctx.fillText("USER CARD", 25, 45);
@@ -38,7 +38,7 @@ function generateCard() {
         const username = document.getElementById("username").value || "sery2013";
         const date = document.getElementById("date").value || "2026-03-12";
 
-        // Username (Тонкая рамка)
+        // Поле Username (Тонкая рамка)
         ctx.strokeStyle = "rgba(255, 122, 24, 0.5)";
         ctx.lineWidth = 1;
         ctx.strokeRect(185, 65, 580, 50);
@@ -48,7 +48,7 @@ function generateCard() {
         ctx.font = "bold 24px Fredoka";
         ctx.fillText(username, 205, 100);
 
-        // Date (Тонкая рамка)
+        // Поле Date
         ctx.strokeStyle = "rgba(255, 204, 0, 0.4)";
         ctx.strokeRect(185, 125, 580, 40);
         ctx.fillStyle = "rgba(15, 15, 20, 0.5)";
@@ -74,20 +74,44 @@ function generateCard() {
 
             ctx.font = "bold 13px Fredoka";
             const bWidth = ctx.measureText(role).width + 26;
-            if(xStart + bWidth > canvas.width - 20) { xStart = 185; yStart += 40; }
+            if(xStart + bWidth > canvas.width - 20) { xStart = 185; yStart += 35; }
 
-            const g = ctx.createLinearGradient(xStart, yStart, xStart, yStart + 30);
+            const g = ctx.createLinearGradient(xStart, yStart, xStart, yStart + 25);
             g.addColorStop(0, c2); g.addColorStop(1, c1);
             ctx.fillStyle = g;
             ctx.beginPath();
-            ctx.roundRect(xStart, yStart, bWidth, 30, 6);
+            ctx.roundRect(xStart, yStart, bWidth, 25, 6);
             ctx.fill();
             ctx.fillStyle = "white";
-            ctx.fillText(role, xStart + 13, yStart + 21);
+            ctx.fillText(role, xStart + 13, yStart + 17);
             xStart += bWidth + 10;
         });
 
-        // ЛОГОТИП ORO (Текст с эффектом)
+        // --- НОВЫЙ БЛОК: BIO (В ТОНКОЙ РАМКЕ) ---
+        const bioY = yStart + 45;
+        ctx.strokeStyle = "rgba(255, 122, 24, 0.5)";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(185, bioY, 580, 45); // Рамка как у логина
+        ctx.fillStyle = "rgba(20, 21, 31, 0.4)";
+        ctx.fillRect(185, bioY, 580, 45);
+        
+        ctx.fillStyle = "#eee";
+        ctx.font = "italic 16px Fredoka";
+        ctx.fillText("Web3 Explorer & Content Enthusiast", 205, bioY + 28);
+
+        // --- СОЦИАЛЬНЫЕ СЕТИ ---
+        const socialY = bioY + 65;
+        ctx.font = "14px Fredoka";
+        ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+        
+        const socials = ["𝕏 Twitter", "✈️ Telegram", "💬 Discord", "🌐 getoro.xyz"];
+        let socialX = 185;
+        socials.forEach(item => {
+            ctx.fillText(item, socialX, socialY);
+            socialX += ctx.measureText(item).width + 25;
+        });
+
+        // ЛОГОТИП ORO (Текст)
         ctx.save();
         ctx.textAlign = "right";
         ctx.fillStyle = "white";
@@ -97,7 +121,7 @@ function generateCard() {
         ctx.fillText("ORO", 760, 360);
         ctx.restore();
 
-        // QR
+        // QR Код
         const qr = new Image();
         qr.crossOrigin = "anonymous";
         qr.onload = function() {
