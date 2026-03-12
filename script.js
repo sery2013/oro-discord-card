@@ -2,12 +2,10 @@ function generateCard() {
     const canvas = document.getElementById("cardCanvas");
     const ctx = canvas.getContext("2d");
 
-    // Очистка
+    // Очистка и фон
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Фон
     ctx.fillStyle = "#0b0c14";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, 1100, 550);
 
     // Username и дата
     const username = document.getElementById("username").value;
@@ -26,8 +24,10 @@ function generateCard() {
 
     ctx.font = "28px Arial";
     let yStart = 290;
-    selectedRoles.forEach(role => {
+    for (let i = 0; i < selectedRoles.length; i++) {
+        let role = selectedRoles[i];
         let roleColor = "white";
+
         if (role.includes("Content Creator")) roleColor = "#ff7a18";
         if (role === "Explorer") roleColor = "#00d4ff";
         if (role === "Iron") roleColor = "#9a9a9a";
@@ -37,53 +37,44 @@ function generateCard() {
 
         ctx.fillStyle = roleColor;
         ctx.fillText(role, 350, yStart);
-        yStart += 40;
-    });
+        yStart += 40; // расстояние между ролями
+    }
 
     ctx.fillStyle = "white";
 
-    // Рисуем аватар (если выбран)
+    // Функция для асинхронной загрузки изображений
+    function drawImage(src, x, y, w, h, clipCircle = false) {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.src = src;
+        img.onload = function () {
+            if (clipCircle) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(x + w/2, y + h/2, w/2, 0, Math.PI*2);
+                ctx.closePath();
+                ctx.clip();
+            }
+
+            ctx.drawImage(img, x, y, w, h);
+
+            if (clipCircle) ctx.restore();
+        };
+    }
+
+    // Аватар
     const avatarInput = document.getElementById("avatar");
     if (avatarInput.files[0]) {
         const reader = new FileReader();
         reader.onload = function (e) {
-            const avatar = new Image();
-            avatar.onload = function () {
-                ctx.save();
-                ctx.beginPath();
-                ctx.arc(150, 280, 90, 0, Math.PI * 2);
-                ctx.closePath();
-                ctx.clip();
-                ctx.drawImage(avatar, 60, 190, 180, 180);
-                ctx.restore();
-
-                // После аватара рисуем логотип и QR
-                drawLogoAndQR(ctx);
-            };
-            avatar.src = e.target.result;
+            drawImage(e.target.result, 60, 190, 180, 180, true);
         };
         reader.readAsDataURL(avatarInput.files[0]);
-    } else {
-        // Если аватар не выбран, сразу рисуем логотип и QR
-        drawLogoAndQR(ctx);
     }
-}
 
-// Функция для логотипа и QR
-function drawLogoAndQR(ctx) {
-    const logo = new Image();
-    logo.crossOrigin = "anonymous";
-    logo.src = "https://ltdfoto.ru/images/2026/03/12/ORO.png";
-    logo.onload = function () {
-        ctx.drawImage(logo, 820, 40, 220, 120);
-
-        const qr = new Image();
-        qr.crossOrigin = "anonymous";
-        qr.src = "https://ltdfoto.ru/images/2026/03/12/qr.png";
-        qr.onload = function () {
-            ctx.drawImage(qr, 880, 360, 160, 160);
-        };
-    };
+    // Логотип и QR
+    drawImage("https://ltdfoto.ru/images/2026/03/12/ORO.png", 820, 40, 220, 120);
+    drawImage("https://ltdfoto.ru/images/2026/03/12/qr.png", 880, 360, 160, 160);
 }
 
 // Download
