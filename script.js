@@ -1,163 +1,209 @@
 function generateCard(){
-    const canvas = document.getElementById("cardCanvas");
-    const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // 🔥 Фон под стиль getoro.xyz
-    const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-    gradient.addColorStop(0, '#0a0a0f');
-    gradient.addColorStop(0.5, '#1a1a2e');
-    gradient.addColorStop(1, '#0f0f1a');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Декоративная сетка
-    ctx.strokeStyle = 'rgba(255, 122, 24, 0.08)';
-    ctx.lineWidth = 1;
-    for(let i = 0; i < canvas.width; i += 40) {
-        ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
+const canvas=document.getElementById("cardCanvas");
+const ctx=canvas.getContext("2d");
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+// Фон
+const gradient=ctx.createLinearGradient(0,0,canvas.width,canvas.height);
+gradient.addColorStop(0,'#0b0c14');
+gradient.addColorStop(1,'#1f1f2a');
+ctx.fillStyle=gradient;
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+// Название карточки сверху
+ctx.fillStyle="white";
+ctx.font="30px Fredoka";
+ctx.fillText("USER CARD ORO",20,40);
+
+// Username и дата
+const username=document.getElementById("username").value;
+const date=document.getElementById("date").value;
+
+// Username рамка
+ctx.fillStyle="#1a1b29";
+ctx.fillRect(180,60,580,50);
+ctx.strokeStyle="#ff7a18";
+ctx.lineWidth=3;
+ctx.strokeRect(180,60,580,50);
+
+ctx.fillStyle="white";
+ctx.font="24px Fredoka";
+ctx.fillText(username,200,95);
+
+// Дата рамка
+ctx.fillStyle="#1a1b29";
+ctx.fillRect(180,120,580,40);
+ctx.strokeStyle="#ffcc00";
+ctx.lineWidth=3;
+ctx.strokeRect(180,120,580,40);
+
+ctx.fillStyle="white";
+ctx.font="18px Fredoka";
+ctx.fillText("Joined: "+date,200,148);
+
+// Роли с ТЕМНЫМИ градиентами
+const roleCheckboxes=document.querySelectorAll(".roles input[type='checkbox']");
+const selectedRoles=Array.from(roleCheckboxes).filter(chk=>chk.checked).map(chk=>chk.value);
+
+let xStart=180;
+let yStart=180;
+const badgeHeight=30;
+const badgeGap=10;
+
+selectedRoles.forEach(role=>{
+    let color1, color2, textColor;
+    switch(role){
+        case "Gold": 
+            color1="#B8860B"; 
+            color2="#FFD700"; 
+            textColor="#FFF8DC";
+            break;
+        case "Silver": 
+            color1="#708090"; 
+            color2="#C0C0C0"; 
+            textColor="#F0F8FF";
+            break;
+        case "Bronze": 
+            color1="#8B4513"; 
+            color2="#CD7F32"; 
+            textColor="#FFE4C4";
+            break;
+        case "Iron": 
+            color1="#2F4F4F"; 
+            color2="#708090"; 
+            textColor="#E0E0E0";
+            break;
+        case "Explorer": 
+            color1="#008B8B"; 
+            color2="#00D4FF"; 
+            textColor="#E0FFFF";
+            break;
+        case "Content Creator Tier 1": 
+            color1="#CC5500"; 
+            color2="#FF7A18"; 
+            textColor="#FFE5CC";
+            break;
+        case "Content Creator Tier 2": 
+            color1="#CC7722"; 
+            color2="#FF9F43"; 
+            textColor="#FFE5CC";
+            break;
+        case "Content Creator Tier 3": 
+            color1="#CC8800"; 
+            color2="#FFA500"; 
+            textColor="#FFF0D0";
+            break;
+        case "Content Creator Tier 4": 
+            color1="#CCAA00"; 
+            color2="#FFD166"; 
+            textColor="#FFF5DD";
+            break;
+        default:
+            color1="#444";
+            color2="#666";
+            textColor="#EEE";
     }
-    for(let i = 0; i < canvas.height; i += 40) {
-        ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
+    
+    const badgeWidth=ctx.measureText(role).width+20;
+    if(xStart+badgeWidth > canvas.width-20){
+        xStart=180;
+        yStart+=badgeHeight+badgeGap;
     }
     
-    // 📝 Заголовок карточки
-    ctx.fillStyle = "white";
-    ctx.font = "bold 28px Fredoka";
-    ctx.fillText("USER CARD ORO", 20, 35);
+    // Рамка бейджа
+    ctx.strokeStyle=color2;
+    ctx.lineWidth=2;
+    ctx.strokeRect(xStart,yStart,badgeWidth,badgeHeight);
     
-    // 👤 Username и 📅 дата
-    const username = document.getElementById("username").value || "Username";
-    const date = document.getElementById("date").value || "2026-01-01";
+    // Фон бейджа с градиентом
+    const grad=ctx.createLinearGradient(xStart,yStart,xStart+badgeWidth,yStart+badgeHeight);
+    grad.addColorStop(0,color1);
+    grad.addColorStop(1,color2);
+    ctx.fillStyle=grad;
+    ctx.fillRect(xStart,yStart,badgeWidth,badgeHeight);
     
-    // Username блок
-    ctx.fillStyle = "#1a1b29";
-    ctx.fillRect(180, 55, 420, 45);
-    ctx.strokeStyle = "#ff7a18";
-    ctx.lineWidth = 2;
-    ctx.strokeRect(180, 55, 420, 45);
-    ctx.fillStyle = "white";
-    ctx.font = "bold 22px Fredoka";
-    ctx.fillText(username, 195, 85);
-    
-    // Дата блок
-    ctx.fillStyle = "#1a1b29";
-    ctx.fillRect(180, 110, 420, 35);
-    ctx.strokeStyle = "#ffcc00";
-    ctx.lineWidth = 2;
-    ctx.strokeRect(180, 110, 420, 35);
-    ctx.fillStyle = "white";
-    ctx.font = "16px Fredoka";
-    ctx.fillText("Joined: " + date, 195, 135);
-    
-    // 🎖️ Роли
-    const roleCheckboxes = document.querySelectorAll(".roles input[type='checkbox']");
-    const selectedRoles = Array.from(roleCheckboxes).filter(chk => chk.checked).map(chk => chk.value);
-    
-    let xStart = 180, yStart = 165, badgeHeight = 28, badgeGap = 8;
-    
-    selectedRoles.forEach(role => {
-        let color = "#fff";
-        switch(role){
-            case "Gold": color = "#FFD700"; break;
-            case "Silver": color = "#C0C0C0"; break;
-            case "Bronze": color = "#CD7F32"; break;
-            case "Iron": color = "#9A9A9A"; break;
-            case "Explorer": color = "#00D4FF"; break;
-            case "Content Creator Tier 1": color = "#FF7A18"; break;
-            case "Content Creator Tier 2": color = "#FF9F43"; break;
-            case "Content Creator Tier 3": color = "#FFA500"; break;
-            case "Content Creator Tier 4": color = "#FFD166"; break;
-        }
-        const badgeWidth = ctx.measureText(role).width + 24;
-        if(xStart + badgeWidth > canvas.width - 160){ xStart = 180; yStart += badgeHeight + badgeGap; }
-        
-        const grad = ctx.createLinearGradient(xStart, yStart, xStart + badgeWidth, yStart + badgeHeight);
-        grad.addColorStop(0, color); grad.addColorStop(1, "#ffffff");
-        ctx.fillStyle = grad;
-        ctx.fillRect(xStart, yStart, badgeWidth, badgeHeight);
-        ctx.strokeStyle = "#000"; ctx.lineWidth = 1; ctx.strokeRect(xStart, yStart, badgeWidth, badgeHeight);
-        ctx.fillStyle = "#000"; ctx.font = "bold 14px Fredoka";
-        ctx.fillText(role, xStart + 12, yStart + 19);
-        xStart += badgeWidth + 8;
-    });
-    
-    // 🖼️ Функция загрузки изображений
-    function drawImageSafe(src, x, y, w, h, clipCircle = false, callback){
-        const img = new Image(); img.crossOrigin = "anonymous"; img.src = src;
-        img.onload = function(){
-            if(clipCircle){ ctx.save(); ctx.beginPath(); ctx.arc(x+w/2, y+h/2, w/2, 0, Math.PI*2); ctx.clip(); }
-            ctx.drawImage(img, x, y, w, h);
-            if(clipCircle) ctx.restore();
-            if(callback) callback();
-        };
-        img.onerror = () => { if(callback) callback(); };
-    }
-    
-    // 👤 Аватар с рамкой
-    const avatarInput = document.getElementById("avatar");
-    if(avatarInput.files && avatarInput.files[0]){
-        const reader = new FileReader();
-        reader.onload = e => {
-            // Рисуем рамку вокруг аватара
+    // Текст роли
+    ctx.fillStyle=textColor;
+    ctx.font="bold 14px Fredoka";
+    ctx.fillText(role,xStart+10,yStart+20);
+
+    xStart+=badgeWidth+10;
+});
+
+// Функция для безопасного рисования
+function drawImageSafe(src,x,y,w,h,clipCircle=false,callback){
+     const img=new Image();
+    img.crossOrigin="anonymous";
+    img.src=src;
+    img.onload=function(){
+        if(clipCircle){
             ctx.save();
             ctx.beginPath();
-            ctx.arc(90, 125, 70, 0, Math.PI*2);
-            ctx.closePath();
-            ctx.strokeStyle = "#ff7a18";
-            ctx.lineWidth = 4;
-            ctx.stroke();
-            ctx.restore();
-            
-            drawImageSafe(e.target.result, 20, 55, 140, 140, true, drawLogoAndQR);
-        };
-        reader.readAsDataURL(avatarInput.files[0]);
-    } else {
-        // Placeholder с рамкой
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(90, 125, 70, 0, Math.PI*2);
-        ctx.closePath();
-        ctx.strokeStyle = "#ff7a18";
-        ctx.lineWidth = 4;
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(90, 125, 65, 0, Math.PI*2);
-        ctx.clip();
-        ctx.fillStyle = "#1a1b29";
-        ctx.fillRect(20, 55, 140, 140);
-        ctx.fillStyle = "#ff7a18";
-        ctx.font = "bold 40px Fredoka";
-        ctx.textAlign = "center";
-        ctx.fillText("👤", 90, 135);
-        ctx.textAlign = "start";
-        ctx.restore();
-        drawLogoAndQR();
-    }
-    
-    function drawLogoAndQR(){
-        // 🟠 Логотип ORO (справа сверху)
-        drawImageSafe("https://ltdfoto.ru/images/2026/03/12/ORO21937ecdce0bb501.png", 650, 15, 130, 55);
-        
-        // 📱 QR код → getoro.xyz (справа снизу, ПОДНЯТ ВЫШЕ)
-        const qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=https://getoro.xyz";
-        drawImageSafe(qrUrl, 665, 240, 110, 110);
-        
-        // Подпись под QR
-        ctx.fillStyle = "rgba(255,255,255,0.7)";
-        ctx.font = "11px Fredoka";
-        ctx.textAlign = "center";
-        ctx.fillText("Scan to visit", 720, 235);
-        ctx.fillText("getoro.xyz", 720, 365);
-        ctx.textAlign = "start";
-    }
+            ctx.arc(x+w/2,y+h/2,w/2,0,Math.PI*2);
+             ctx.closePath();
+            ctx.clip();
+        }
+        ctx.drawImage(img,x,y,w,h);
+        if(clipCircle) ctx.restore();
+        if(callback) callback();
+    };
+    img.onerror=function(){
+        if(callback) callback();
+    };
 }
 
-// 💾 Скачать карточку
+// Аватар слева С РАМКОЙ
+const avatarInput=document.getElementById("avatar");
+if(avatarInput.files[0]){
+    const reader=new FileReader();
+    reader.onload=function(e){
+        // Сначала рисуем рамку вокруг аватара
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(90,130,72,0,Math.PI*2);
+        ctx.closePath();
+        ctx.strokeStyle="#ff7a18";
+        ctx.lineWidth=4;
+        ctx.stroke();
+        ctx.restore();
+        
+        drawImageSafe(e.target.result,20,60,140,140,true,drawLogoAndQR);
+    };
+     reader.readAsDataURL(avatarInput.files[0]);
+}else{
+    // Рисуем рамку для placeholder
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(90,130,72,0,Math.PI*2);
+    ctx.closePath();
+    ctx.strokeStyle="#ff7a18";
+    ctx.lineWidth=4;
+    ctx.stroke();
+    ctx.restore();
+    drawLogoAndQR();
+}
+
+function drawLogoAndQR(){
+    // Логотип ORO справа сверху
+    drawImageSafe("https://ltdfoto.ru/images/2026/03/12/ORO21937ecdce0bb501.png",650,20,120,60);
+    // QR код справа снизу
+    drawImageSafe("https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=https://getoro.xyz",665,240,110,110);
+    
+    // Подпись под QR
+    ctx.fillStyle="rgba(255,255,255,0.7)";
+    ctx.font="11px Fredoka";
+    ctx.textAlign="center";
+    ctx.fillText("Scan to visit",720,235);
+    ctx.fillText("getoro.xyz",720,365);
+    ctx.textAlign="start";
+}
+}
+
+// Скачать
 function downloadCard(){
-    const canvas = document.getElementById("cardCanvas");
-    const link = document.createElement("a");
-    link.download = "oro-card.png";
-    link.href = canvas.toDataURL("image/png");
-    link.click();
+const canvas=document.getElementById("cardCanvas");
+const link=document.createElement("a");
+link.download="oro-card.png";
+link.href=canvas.toDataURL();
+link.click();
 }
