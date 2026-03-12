@@ -15,7 +15,7 @@ ctx.fillStyle="white";
 ctx.font="bold 30px Fredoka";
 ctx.fillText("USER CARD ORO",20,40);
 
-// Username
+// Username и дата
 const username=document.getElementById("username").value||"Username";
 const date=document.getElementById("date").value||"2026-01-01";
 
@@ -107,7 +107,7 @@ const avX=20,avY=60,avS=140,radius=15;
 if(avInput.files[0]){
     const reader=new FileReader();
     reader.onload=e=>{
-        // Рамка
+        // 1️⃣ РИСУЕМ КВАДРАТНУЮ РАМКУ
         ctx.save();
         ctx.beginPath();
         ctx.roundRect(avX,avY,avS,avS,radius);
@@ -117,7 +117,7 @@ if(avInput.files[0]){
         ctx.stroke();
         ctx.restore();
         
-        // Аватар
+        // 2️⃣ ОБРЕЗАЕМ АВАТАР ПО РАМКЕ (чтобы не выходил)
         ctx.save();
         ctx.beginPath();
         ctx.roundRect(avX+4,avY+4,avS-8,avS-8,radius-2);
@@ -128,7 +128,7 @@ if(avInput.files[0]){
     };
     reader.readAsDataURL(avInput.files[0]);
 }else{
-    // Рамка placeholder
+    // 1️⃣ РИСУЕМ РАМКУ для placeholder
     ctx.save();
     ctx.beginPath();
     ctx.roundRect(avX,avY,avS,avS,radius);
@@ -138,7 +138,7 @@ if(avInput.files[0]){
     ctx.stroke();
     ctx.restore();
     
-    // Placeholder
+    // 2️⃣ Placeholder с обрезкой
     ctx.save();
     ctx.beginPath();
     ctx.roundRect(avX+4,avY+4,avS-8,avS-8,radius-2);
@@ -159,20 +159,20 @@ if(avInput.files[0]){
 }
 
 function drawRest(){
-    // Логотип ORO
+    // 🟠 Логотип ORO справа сверху
     loadImg("https://ltdfoto.ru/images/2026/03/12/ORO.png",650,20,120,60);
     
-    // 🔥 QR КОД ВНИЗУ (отступ 10px от низа)
+    // 📱 QR КОД СЛЕВА ВНИЗУ (под аватаром, отступ 10px от низа)
     const qrSize=120;
     const qrY=canvas.height-10-qrSize; // 400-10-120=270
-    loadImg("https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://getoro.xyz",650,qrY,qrSize,qrSize);
+    loadImg("https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://getoro.xyz",20,qrY,qrSize,qrSize);
     
-    // Подпись
+    // Подпись под QR
     ctx.fillStyle="rgba(255,255,255,0.7)";
     ctx.font="11px Fredoka";
     ctx.textAlign="center";
-    ctx.fillText("Scan to visit",710,qrY-5);
-    ctx.fillText("getoro.xyz",710,canvas.height-5);
+    ctx.fillText("Scan to visit",80,qrY-5);
+    ctx.fillText("getoro.xyz",80,canvas.height-5);
     ctx.textAlign="start";
 }
 }
