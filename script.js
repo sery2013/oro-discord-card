@@ -3,22 +3,23 @@ function generateCard() {
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // 1. ФОН (Глубокий радиальный градиент)
+    // 1. Фон (Темный радиальный градиент в стиле getoro.xyz)
     const bgGrad = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, 50, canvas.width / 2, canvas.height / 2, 500);
     bgGrad.addColorStop(0, '#11121d');
     bgGrad.addColorStop(1, '#050508');
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // 2. ТОНКАЯ РАМКА КАРТОЧКИ
+    // 2. Тонкая внешняя рамка
     ctx.strokeStyle = "rgba(255, 122, 24, 0.4)";
     ctx.lineWidth = 1.5;
     ctx.strokeRect(5, 5, canvas.width - 10, canvas.height - 10);
 
     const avX = 25, avY = 70, avS = 140, radius = 18;
 
-    function drawFinalLayer() {
-        // Заголовок
+    // Функция отрисовки текста, ролей и логотипа
+    function drawFinalContent() {
+        // Название проекта
         ctx.save();
         ctx.shadowColor = "rgba(255, 122, 24, 0.5)";
         ctx.shadowBlur = 10;
@@ -28,9 +29,9 @@ function generateCard() {
         ctx.restore();
 
         const username = document.getElementById("username").value || "sery2013";
-        const date = document.getElementById("date").value || "2026-03-05";
+        const date = document.getElementById("date").value || "2026-03-12";
 
-        // Поле Username
+        // Username
         ctx.save();
         ctx.shadowColor = "#ff7a18";
         ctx.shadowBlur = 8;
@@ -40,12 +41,11 @@ function generateCard() {
         ctx.fillRect(185, 65, 580, 50);
         ctx.strokeRect(185, 65, 580, 50);
         ctx.restore();
-        
         ctx.fillStyle = "white";
         ctx.font = "bold 24px Fredoka";
         ctx.fillText(username, 205, 98);
 
-        // Поле даты
+        // Дата
         ctx.strokeStyle = "#ffcc00";
         ctx.fillStyle = "rgba(15, 15, 20, 0.8)";
         ctx.strokeRect(185, 125, 580, 40);
@@ -54,7 +54,7 @@ function generateCard() {
         ctx.font = "18px Fredoka";
         ctx.fillText("Joined: " + date, 205, 152);
 
-        // --- РОЛИ С УНИКАЛЬНЫМИ ЦВЕТАМИ ---
+        // --- РОЛИ (Разные цвета) ---
         const roleCheckboxes = document.querySelectorAll(".roles input[type='checkbox']");
         const selectedRoles = Array.from(roleCheckboxes).filter(chk => chk.checked).map(chk => chk.value);
         let xStart = 185, yStart = 185;
@@ -85,18 +85,19 @@ function generateCard() {
             xStart += bWidth + 10;
         });
 
-        // ЛОГОТИП ORO (GitHub Direct Link)
+        // ЛОГОТИП ORO (Загрузка с GitHub)
         const logo = new Image();
         logo.crossOrigin = "anonymous";
-        logo.onload = function() {
+        logo.src = "https://github.com/sery2013/oro-discord-card/blob/main/ORO.png?raw=true";
+        logo.onload = () => {
             ctx.drawImage(logo, 630, 310, 130, 65);
         };
-        logo.src = "https://github.com/sery2013/oro-discord-card/blob/main/ORO.png?raw=true";
 
-        // QR КОД
+        // QR Код
         const qr = new Image();
         qr.crossOrigin = "anonymous";
-        qr.onload = function() {
+        qr.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://getoro.xyz";
+        qr.onload = () => {
             ctx.drawImage(qr, 35, 245, 120, 120);
             ctx.fillStyle = "rgba(255,255,255,0.4)";
             ctx.font = "10px Fredoka";
@@ -104,12 +105,10 @@ function generateCard() {
             ctx.fillText("Scan to visit", 95, 240);
             ctx.fillText("getoro.xyz", 95, 380);
         };
-        qr.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://getoro.xyz";
     }
 
     // РИСУЕМ АВАТАР
     const avatarInput = document.getElementById("avatar");
-    
     ctx.save();
     ctx.shadowColor = "#ff7a18";
     ctx.shadowBlur = 12;
@@ -124,6 +123,7 @@ function generateCard() {
         const reader = new FileReader();
         reader.onload = (e) => {
             const img = new Image();
+            img.src = e.target.result;
             img.onload = () => {
                 ctx.save();
                 ctx.beginPath();
@@ -131,9 +131,8 @@ function generateCard() {
                 ctx.clip();
                 ctx.drawImage(img, avX, avY, avS, avS);
                 ctx.restore();
-                drawFinalLayer();
+                drawFinalContent();
             };
-            img.src = e.target.result;
         };
         reader.readAsDataURL(avatarInput.files[0]);
     } else {
@@ -141,6 +140,14 @@ function generateCard() {
         ctx.beginPath();
         ctx.roundRect(avX + 2, avY + 2, avS - 4, avS - 4, radius - 2);
         ctx.fill();
-        drawFinalLayer();
+        drawFinalContent();
     }
+}
+
+function downloadCard() {
+    const canvas = document.getElementById("cardCanvas");
+    const link = document.createElement("a");
+    link.download = "oro-card.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
 }
