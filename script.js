@@ -117,7 +117,7 @@ if(avInput.files[0]){
         ctx.stroke();
         ctx.restore();
         
-        // 2️⃣ ОБРЕЗАЕМ АВАТАР ПО РАМКЕ (чтобы не выходил)
+        // 2️⃣ ОБРЕЗАЕМ АВАТАР ПО РАМКЕ (ЧТОБЫ НЕ ВЫХОДИЛ)
         ctx.save();
         ctx.beginPath();
         ctx.roundRect(avX+4,avY+4,avS-8,avS-8,radius-2);
@@ -128,7 +128,7 @@ if(avInput.files[0]){
     };
     reader.readAsDataURL(avInput.files[0]);
 }else{
-    // 1️⃣ РИСУЕМ РАМКУ для placeholder
+    // 1️⃣ РИСУЕМ РАМКУ
     ctx.save();
     ctx.beginPath();
     ctx.roundRect(avX,avY,avS,avS,radius);
@@ -138,7 +138,7 @@ if(avInput.files[0]){
     ctx.stroke();
     ctx.restore();
     
-    // 2️⃣ Placeholder с обрезкой
+    // 2️⃣ PLACEHOLDER С ОБРЕЗКОЙ
     ctx.save();
     ctx.beginPath();
     ctx.roundRect(avX+4,avY+4,avS-8,avS-8,radius-2);
@@ -159,10 +159,10 @@ if(avInput.files[0]){
 }
 
 function drawRest(){
-    // 🟠 Логотип ORO справа сверху
+    // 🟠 ЛОГОТИП ORO СПРАВА СВЕРХУ
     loadImg("https://ltdfoto.ru/images/2026/03/12/ORO.png",650,20,120,60);
     
-    // 📱 QR КОД СЛЕВА ВНИЗУ (под аватаром, отступ 10px от низа)
+    // 📱 QR КОД СЛЕВА ВНИЗУ ПОД АВАТАРОМ (отступ 10px от низа)
     const qrSize=120;
     const qrY=canvas.height-10-qrSize; // 400-10-120=270
     loadImg("https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://getoro.xyz",20,qrY,qrSize,qrSize);
