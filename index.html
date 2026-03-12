@@ -1,53 +1,94 @@
-<!DOCTYPE html>
-<html>
+function generateCard(){
 
-<head>
+const canvas=document.getElementById("cardCanvas")
+const ctx=canvas.getContext("2d")
 
-<meta charset="UTF-8">
+ctx.fillStyle="#0b0c14"
+ctx.fillRect(0,0,1100,550)
 
-<title>ORO User Card</title>
+// username и дата
+const username=document.getElementById("username").value
+const date=document.getElementById("date").value
 
-<link rel="stylesheet" href="style.css">
+ctx.fillStyle="white"
+ctx.font="42px Arial"
+ctx.fillText(username,350,230)
 
-</head>
+ctx.font="24px Arial"
+ctx.fillText("Joined: "+date,350,340)
 
-<body>
+// аватар
+const avatarInput=document.getElementById("avatar")
+const reader=new FileReader()
+reader.onload=function(){
+const avatar=new Image()
+avatar.src=reader.result
+avatar.onload=function(){
+ctx.save()
+ctx.beginPath()
+ctx.arc(150,280,90,0,Math.PI*2)
+ctx.closePath()
+ctx.clip()
+ctx.drawImage(avatar,60,190,180,180)
+ctx.restore()
+}
+}
+if(avatarInput.files[0]){
+reader.readAsDataURL(avatarInput.files[0])
+}
 
-<h1 class="title">ORO USER CARD</h1>
+// логотип
+const logo=new Image()
+logo.crossOrigin="anonymous"
+logo.src="https://ltdfoto.ru/images/2026/03/12/ORO.png"
+logo.onload=function(){
+ctx.drawImage(logo,820,40,220,120)
+}
 
-<div class="panel">
+// QR
+const qr=new Image()
+qr.crossOrigin="anonymous"
+qr.src="https://ltdfoto.ru/images/2026/03/12/qr.png"
+qr.onload=function(){
+ctx.drawImage(qr,880,360,160,160)
+}
 
-<input type="file" id="avatar">
+// роли (несколько)
+const roleSelect=document.getElementById("role")
+const selectedRoles=Array.from(roleSelect.selectedOptions).map(opt=>opt.value)
 
-<input type="text" id="username" placeholder="Discord Username">
+ctx.font="28px Arial"
 
-<input type="date" id="date">
+let yStart=290
+for(let i=0;i<selectedRoles.length;i++){
 
-<select id="role" multiple size="8">
+let role=selectedRoles[i]
+let roleColor="white"
 
-<option>Content Creator Tier 1</option>
-<option>Content Creator Tier 2</option>
-<option>Content Creator Tier 3</option>
-<option>Content Creator Tier 4</option>
+if(role.includes("Content Creator")) roleColor="#ff7a18"
+if(role==="Explorer") roleColor="#00d4ff"
+if(role==="Iron") roleColor="#9a9a9a"
+if(role==="Bronze") roleColor="#cd7f32"
+if(role==="Silver") roleColor="#c0c0c0"
+if(role==="Gold") roleColor="#ffd700"
 
-<option>Explorer</option>
+ctx.fillStyle=roleColor
+ctx.fillText(role,350,yStart)
 
-<option>Iron</option>
-<option>Bronze</option>
-<option>Silver</option>
-<option>Gold</option>
+yStart+=40 // расстояние между ролями
+}
 
-</select>
+ctx.fillStyle="white"
 
-<button onclick="generateCard()">Generate Card</button>
+}
 
-<button onclick="downloadCard()">Download</button>
+// download
+function downloadCard(){
 
-</div>
+const canvas=document.getElementById("cardCanvas")
+const link=document.createElement("a")
+link.download="oro-card.png"
+link.href=canvas.toDataURL()
+link.click()
 
-<canvas id="cardCanvas" width="1100" height="550"></canvas>
-
-<script src="script.js"></script>
-
-</body>
-</html>
+}
