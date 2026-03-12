@@ -1,149 +1,274 @@
 body {
-    /* Цвета в стиле getoro.xyz: глубокий синий переходит в более светлый стальной */
-    background: radial-gradient(circle at top right, #25293c, #13151f 70%);
-    background-attachment: fixed;
-    font-family: 'Fredoka', Arial, sans-serif;
-    color: white;
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%); 
+font-family: 'Fredoka', Arial, sans-serif; 
+color: white; 
+margin: 0; 
+padding: 0; 
+min-height: 100vh; 
+display: flex; 
+flex-direction: column;
+
 }
 
 /* 🔥 Рамка для заголовка */
 .header-frame {
-    width: 100%;
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 0 20px;
-    box-sizing: border-box;
+width: 100%; 
+max-width: 1200px; 
+margin: 20px auto; 
+padding: 0 20px; 
+box-sizing: border-box;
+
 }
 
 .title {
-    text-align: center;
-    font-size: 32px;
-    margin: 0;
-    padding: 12px 25px;
-    background: linear-gradient(90deg, #ffcc00, #ff7a18);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    border: 2px solid rgba(255, 122, 24, 0.4);
-    border-radius: 12px;
+text-align: center; 
+font-size: 36px; 
+margin: 0; 
+padding: 15px 30px; 
+background: linear-gradient(90deg, #ffcc00, #ff7a18); 
+-webkit-background-clip: text; 
+-webkit-text-fill-color: transparent; 
+background-clip: text; 
+border: 3px solid transparent; 
+border-image: linear-gradient(90deg, #ffcc00, #ff7a18, #ffcc00) 1; 
+border-radius: 16px; 
+box-shadow: 0 0 30px rgba(255, 122, 24, 0.3);
+
 }
 
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 30px;
-    margin: 20px;
-    flex: 1;
-    flex-wrap: wrap;
+display: flex; 
+justify-content: center; 
+align-items: flex-start; 
+gap: 20px; 
+margin: 20px; 
+flex: 1; 
+flex-wrap: wrap;
+
 }
 
 .panel {
-    /* Светлая "стеклянная" панель без черного цвета */
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    padding: 25px;
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1);
-    width: 300px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+background: linear-gradient(145deg, #1a1b2a, #0f0f1a); 
+padding: 20px; 
+border-radius: 16px; 
+box-shadow: 0 8px 32px rgba(255, 122, 24, 0.15), 0 0 0 1px rgba(255, 122, 24, 0.1); 
+width: 280px; 
+border: 1px solid rgba(255, 122, 24, 0.2);
+
 }
 
 .panel input[type="text"],
 .panel input[type="date"] {
-    display: block;
-    width: 100%;
-    margin: 10px 0;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.03);
-    color: white;
-    font-family: 'Fredoka', sans-serif;
-    box-sizing: border-box;
+display: block; 
+width: 100%; 
+margin: 8px 0; 
+padding: 10px 12px; 
+border-radius: 8px;
+border: 1px solid rgba(255, 122, 24, 0.3); 
+background: rgba(26, 27, 41, 0.8); 
+color: white; 
+font-family: 'Fredoka', sans-serif; 
+box-sizing: border-box;
+
 }
 
-.panel input[type="text"]:focus {
-    outline: none;
-    border-color: #ff7a18;
-    background: rgba(255, 255, 255, 0.07);
+.panel input[type="text"]::placeholder,
+.panel input[type="date"]::-webkit-datetime-edit {
+color: rgba(255, 255, 255, 0.6);
+
 }
 
-/* Иконка календаря теперь тоже в стиле сайта */
-.panel input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(0.8) sepia(1) saturate(5) hue-rotate(15deg);
-    cursor: pointer;
+/* 🔥 Современный кнопка загрузки аватара */
+.file-upload {
+margin: 12px 0;
+
+}
+
+.file-upload input[type="file"] {
+display: none;
+
 }
 
 .file-upload-btn {
-    display: block;
-    width: 100%;
-    padding: 12px;
-    border-radius: 10px;
-    background: linear-gradient(45deg, #ffcc00, #ff7a18);
-    color: #13151f;
-    font-weight: 600;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.3s ease;
+display: block; 
+width: 100%; 
+padding: 10px 15px; 
+border-radius: 8px; 
+background: linear-gradient(45deg, #ffcc00, #ff7a18); 
+color: black; 
+font-weight: 600; 
+font-family: 'Fredoka', sans-serif; 
+cursor: pointer; 
+text-align: center; 
+transition: transform 0.2s, box-shadow 0.2s; 
+box-sizing: border-box;
+
 }
 
 .file-upload-btn:hover {
-    filter: brightness(1.1);
-    box-shadow: 0 5px 15px rgba(255, 122, 24, 0.3);
+transform: translateY(-2px); 
+box-shadow: 0 4px 20px rgba(255, 122, 24, 0.4);
+
+}
+
+.file-upload-btn:active {
+transform: translateY(0);
+
 }
 
 .roles {
-    margin: 15px 0;
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    padding: 10px;
+margin: 15px 0; 
+max-height: 180px; 
+overflow-y: auto; 
+padding-right: 5px;
+
+}
+
+.roles::-webkit-scrollbar {
+width: 6px;
+
+}
+
+.roles::-webkit-scrollbar-track {
+background: rgba(255, 255, 255, 0.1); 
+border-radius: 3px;
+
+}
+
+.roles::-webkit-scrollbar-thumb {
+background: linear-gradient(45deg, #ffcc00, #ff7a18); 
+border-radius: 3px;
+
 }
 
 .roles label {
-    display: flex;
-    align-items: center;
-    padding: 5px;
-    font-size: 14px;
-    cursor: pointer;
+display: block; 
+margin: 4px 0; 
+cursor: pointer; 
+padding: 4px 8px; 
+border-radius: 4px; 
+transition: background 0.2s;
+
+}
+
+.roles label:hover {
+background: rgba(255, 122, 24, 0.15);
+
+}
+
+.roles input[type="checkbox"] {
+margin-right: 8px; 
+accent-color: #ff7a18;
+
 }
 
 button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 10px;
-    background: white; /* Белая кнопка как акцент на getoro.xyz */
-    color: #13151f;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
+padding: 12px 20px; 
+margin: 8px 8px 8px 0; 
+border: none; 
+border-radius: 10px; 
+background: linear-gradient(45deg, #ffcc00, #ff7a18); 
+color: black; 
+font-weight: 600;
+font-family: 'Fredoka', sans-serif; 
+cursor: pointer; 
+transition: transform 0.2s, box-shadow 0.2s; 
+font-size: 14px;
+
 }
 
 button:hover {
-    background: #ff7a18;
-    color: white;
+transform: translateY(-2px); 
+box-shadow: 0 6px 25px rgba(255, 122, 24, 0.5);
+
+}
+
+button:active {
+transform: translateY(0);
+
 }
 
 canvas {
-    border-radius: 20px;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
-    background-color: #13151f;
-    max-width: 100%;
+border-radius: 20px; 
+border: 2px solid transparent;
+border-image: linear-gradient(45deg, #ffcc00, #ff7a18, #ffcc00) 1; 
+box-shadow: 0 0 50px rgba(255, 160, 0, 0.35); 
+max-width: 100%; 
+height: auto;
+
 }
 
+/* 🔻 Нижний колонтитул */
 .footer {
-    text-align: center;
-    padding: 30px;
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 13px;
+text-align: center; 
+padding: 20px; 
+margin-top: auto; 
+background: rgba(10, 11, 20, 0.8); 
+border-top: 1px solid rgba(255, 122, 24, 0.2);
+
 }
 
-.footer-link { color: #ff7a18; text-decoration: none; }
+.footer p {
+margin: 5px 0; 
+font-size: 14px; 
+color: rgba(255, 255, 255, 0.8);
+
+}
+
+.footer-link {
+color: #ff7a18; 
+text-decoration: none; 
+font-weight: 600; 
+transition: color 0.2s;
+
+}
+
+.footer-link:hover {
+color: #ffcc00; 
+text-decoration: underline;
+
+}
+
+.developer {
+margin-top: 8px;
+
+}
+
+.twitter-link {
+display: inline-flex; 
+align-items: center; 
+gap: 6px; 
+color: white; 
+text-decoration: none; 
+font-weight: 500; 
+transition: color 0.2s;
+
+}
+
+.twitter-link:hover {
+color: #1da1f2;
+
+}
+
+.twitter-icon {
+width: 18px; 
+height: 18px; 
+fill: currentColor;
+
+}
+
+/* 📱 Адаптив */
+@media (max-width: 900px) {
+.container {
+flex-direction: column; 
+align-items: center; 
+}
+.panel {
+width: 100%; 
+max-width: 320px; 
+}
+.title {
+font-size: 28px; 
+padding: 12px 20px; 
+}
+}
