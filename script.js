@@ -3,14 +3,14 @@ function generateCard() {
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // 1. ФОН С МЯГКИМ ГРАДИЕНТОМ
+    // 1. ФОН
     const bgGrad = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, 100, canvas.width / 2, canvas.height / 2, 500);
     bgGrad.addColorStop(0, '#0d0e1a');
     bgGrad.addColorStop(1, '#050508');
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // 2. ПРОЗРАЧНЫЙ ПАТТЕРН (0.03)
+    // 2. ПРОЗРАЧНЫЙ ПАТТЕРН (ORO / * / ())
     ctx.save();
     ctx.fillStyle = "rgba(255, 122, 24, 0.03)";
     ctx.font = "bold 35px Fredoka";
@@ -22,7 +22,7 @@ function generateCard() {
     }
     ctx.restore();
 
-    // 3. ВНЕШНЯЯ РАМКА КАРТОЧКИ
+    // 3. ВНЕШНЯЯ РАМКА
     ctx.strokeStyle = "rgba(255, 122, 24, 0.3)";
     ctx.lineWidth = 1;
     ctx.strokeRect(5, 5, canvas.width - 10, canvas.height - 10);
@@ -39,18 +39,18 @@ function generateCard() {
         ctx.fillText("USER CARD", 25, 45);
         ctx.restore();
 
-        // --- БЕЛАЯ ЛИНИЯ СПРАВА ОТ ЗАГОЛОВКА ---
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.8)";
+        // --- БЕЛАЯ ЛИНИЯ СПРАВА ---
+        ctx.strokeStyle = "#ffffff";
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.moveTo(215, 35); // Конец текста USER CARD
+        ctx.moveTo(215, 35); 
         ctx.lineTo(765, 35);
         ctx.stroke();
 
         const username = document.getElementById("username").value || "sery2013";
         const date = document.getElementById("date").value || "2026-03-12";
 
-        // Поля ввода (Username/Date)
+        // Поля Username/Date
         ctx.strokeStyle = "rgba(255, 122, 24, 0.5)";
         ctx.strokeRect(185, 65, 580, 50);
         ctx.fillStyle = "white";
@@ -97,20 +97,31 @@ function generateCard() {
         ctx.font = "italic 16px Fredoka";
         ctx.fillText("Web3 Explorer & Content Enthusiast", 205, bioY + 28);
 
-        // --- СОЦИАЛЬНЫЕ СЕТИ С ТОЧНЫМИ ИКОНКАМИ ---
-        const socialY = bioY + 65;
+        // --- СОЦИАЛЬНЫЕ СЕТИ (Опущены на 40px) ---
+        const socialY = bioY + 105; // Было +65, стало +105
         ctx.font = "14px Fredoka";
         ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
-        
-        const socials = [
-            { t: "𝕏 Twitter", x: 185 },
-            { t: "✈ Telegram", x: 275 },
-            { t: "💬 Discord", x: 375 },
-            { t: "🌐 getoro.xyz", x: 475 }
-        ];
-        socials.forEach(s => ctx.fillText(s.t, s.x, socialY));
 
-        // --- ЛОГОТИП ORO (НИЖНИЙ ПРАВЫЙ) ---
+        // Отрисовка X (Twitter)
+        ctx.fillText("X", 185, socialY);
+        
+        // Отрисовка Telegram (иконка самолета)
+        ctx.beginPath();
+        ctx.moveTo(225, socialY - 10);
+        ctx.lineTo(240, socialY - 5);
+        ctx.lineTo(235, socialY);
+        ctx.lineTo(225, socialY - 10);
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+        ctx.stroke();
+        ctx.fillText("Telegram", 245, socialY);
+
+        // Отрисовка Discord
+        ctx.fillText("Discord", 345, socialY);
+        
+        // Сайт
+        ctx.fillText("getoro.xyz", 445, socialY);
+
+        // --- НИЖНИЙ ЛОГОТИП ORO ---
         ctx.save();
         ctx.textAlign = "right";
         ctx.fillStyle = "white";
