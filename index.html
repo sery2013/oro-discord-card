@@ -3,34 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <title>ORO Discord Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <h1 class="title">ORO USER CARD</h1>
 
-<div class="panel">
-  <input type="file" id="avatar" accept="image/*">
-  <input type="text" id="username" placeholder="Discord Username">
-  <input type="date" id="date">
+<div class="container">
+  <!-- Панель слева -->
+  <div class="panel">
+    <input type="file" id="avatar" accept="image/*">
+    <input type="text" id="username" placeholder="Discord Username">
+    <input type="date" id="date">
 
-  <div class="roles">
-    <label><input type="checkbox" value="Content Creator Tier 1"> Content Creator Tier 1</label>
-    <label><input type="checkbox" value="Content Creator Tier 2"> Content Creator Tier 2</label>
-    <label><input type="checkbox" value="Content Creator Tier 3"> Content Creator Tier 3</label>
-    <label><input type="checkbox" value="Content Creator Tier 4"> Content Creator Tier 4</label>
-    <label><input type="checkbox" value="Explorer"> Explorer</label>
-    <label><input type="checkbox" value="Iron"> Iron</label>
-    <label><input type="checkbox" value="Bronze"> Bronze</label>
-    <label><input type="checkbox" value="Silver"> Silver</label>
-    <label><input type="checkbox" value="Gold"> Gold</label>
+    <div class="roles">
+      <label><input type="checkbox" value="Content Creator Tier 1"> Content Creator Tier 1</label>
+      <label><input type="checkbox" value="Content Creator Tier 2"> Content Creator Tier 2</label>
+      <label><input type="checkbox" value="Content Creator Tier 3"> Content Creator Tier 3</label>
+      <label><input type="checkbox" value="Content Creator Tier 4"> Content Creator Tier 4</label>
+      <label><input type="checkbox" value="Explorer"> Explorer</label>
+      <label><input type="checkbox" value="Iron"> Iron</label>
+      <label><input type="checkbox" value="Bronze"> Bronze</label>
+      <label><input type="checkbox" value="Silver"> Silver</label>
+      <label><input type="checkbox" value="Gold"> Gold</label>
+    </div>
+
+    <button onclick="generateCard()">Generate Card</button>
+    <button onclick="downloadCard()">Download</button>
   </div>
 
-  <button onclick="generateCard()">Generate Card</button>
-  <button onclick="downloadCard()">Download</button>
+  <!-- Canvas справа -->
+  <canvas id="cardCanvas" width="800" height="400"></canvas>
 </div>
-
-<canvas id="cardCanvas" width="1100" height="550"></canvas>
 
 <script src="script.js"></script>
 </body>
