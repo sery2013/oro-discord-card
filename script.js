@@ -2,10 +2,12 @@ function generateCard() {
     const canvas = document.getElementById("cardCanvas");
     const ctx = canvas.getContext("2d");
 
-    // Очистка и фон
+    // Очистка
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Фон
     ctx.fillStyle = "#0b0c14";
-    ctx.fillRect(0, 0, 1100, 550);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Username и дата
     const username = document.getElementById("username").value;
@@ -40,32 +42,13 @@ function generateCard() {
 
     ctx.fillStyle = "white";
 
-    // Асинхронная функция для загрузки изображения
-    function loadImage(src) {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.crossOrigin = "anonymous";
-            img.src = src;
-            img.onload = () => resolve(img);
-        });
-    }
-
-    async function drawImages() {
-        // Логотип
-        const logo = await loadImage("https://ltdfoto.ru/images/2026/03/12/ORO.png");
-        ctx.drawImage(logo, 820, 40, 220, 120);
-
-        // QR
-        const qr = await loadImage("https://ltdfoto.ru/images/2026/03/12/qr.png");
-        ctx.drawImage(qr, 880, 360, 160, 160);
-
-        // Аватар (если загружен)
-        const avatarInput = document.getElementById("avatar");
-        if (avatarInput.files[0]) {
-            const reader = new FileReader();
-            reader.onload = async function (e) {
-                const avatar = await loadImage(e.target.result);
-
+    // Рисуем аватар (если выбран)
+    const avatarInput = document.getElementById("avatar");
+    if (avatarInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const avatar = new Image();
+            avatar.onload = function () {
                 ctx.save();
                 ctx.beginPath();
                 ctx.arc(150, 280, 90, 0, Math.PI * 2);
@@ -73,12 +56,34 @@ function generateCard() {
                 ctx.clip();
                 ctx.drawImage(avatar, 60, 190, 180, 180);
                 ctx.restore();
-            };
-            reader.readAsDataURL(avatarInput.files[0]);
-        }
-    }
 
-    drawImages();
+                // После аватара рисуем логотип и QR
+                drawLogoAndQR(ctx);
+            };
+            avatar.src = e.target.result;
+        };
+        reader.readAsDataURL(avatarInput.files[0]);
+    } else {
+        // Если аватар не выбран, сразу рисуем логотип и QR
+        drawLogoAndQR(ctx);
+    }
+}
+
+// Функция для логотипа и QR
+function drawLogoAndQR(ctx) {
+    const logo = new Image();
+    logo.crossOrigin = "anonymous";
+    logo.src = "https://ltdfoto.ru/images/2026/03/12/ORO.png";
+    logo.onload = function () {
+        ctx.drawImage(logo, 820, 40, 220, 120);
+
+        const qr = new Image();
+        qr.crossOrigin = "anonymous";
+        qr.src = "https://ltdfoto.ru/images/2026/03/12/qr.png";
+        qr.onload = function () {
+            ctx.drawImage(qr, 880, 360, 160, 160);
+        };
+    };
 }
 
 // Download
