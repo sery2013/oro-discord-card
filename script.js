@@ -3,14 +3,14 @@ const canvas=document.getElementById("cardCanvas");
 const ctx=canvas.getContext("2d");
 ctx.clearRect(0,0,canvas.width,canvas.height);
 
-// Фон с градиентом
+// Фон
 const gradient=ctx.createLinearGradient(0,0,canvas.width,canvas.height);
 gradient.addColorStop(0,'#0b0c14');
 gradient.addColorStop(1,'#1f1f2a');
 ctx.fillStyle=gradient;
 ctx.fillRect(0,0,canvas.width,canvas.height);
 
-// Название карточки
+// Название карточки сверху
 ctx.fillStyle="white";
 ctx.font="bold 30px Fredoka";
 ctx.fillText("USER CARD ORO",20,40);
@@ -19,7 +19,7 @@ ctx.fillText("USER CARD ORO",20,40);
 const username=document.getElementById("username").value||"Username";
 const date=document.getElementById("date").value||"2026-01-01";
 
-// Username блок
+// Username рамка
 ctx.fillStyle="#1a1b29";
 ctx.fillRect(180,60,580,50);
 ctx.strokeStyle="#ff7a18";
@@ -29,7 +29,7 @@ ctx.fillStyle="white";
 ctx.font="bold 24px Fredoka";
 ctx.fillText(username,200,95);
 
-// Дата блок
+// Дата рамка
 ctx.fillStyle="#1a1b29";
 ctx.fillRect(180,120,580,40);
 ctx.strokeStyle="#ffcc00";
@@ -40,73 +40,81 @@ ctx.font="18px Fredoka";
 ctx.fillText("Joined: "+date,200,148);
 
 // 🔥 РОЛИ С ТЁМНЫМИ ГРАДИЕНТАМИ
-const roles=document.querySelectorAll(".roles input[type='checkbox']");
-const selected=Array.from(roles).filter(r=>r.checked).map(r=>r.value);
+const roleCheckboxes=document.querySelectorAll(".roles input[type='checkbox']");
+const selectedRoles=Array.from(roleCheckboxes).filter(chk=>chk.checked).map(chk=>chk.value);
 
-let x=180,y=180;
-const h=30,gap=10;
+let xStart=180;
+let yStart=180;
+const badgeHeight=30;
+const badgeGap=10;
 
-selected.forEach(role=>{
-    let c1,c2,txt;
+selectedRoles.forEach(role=>{
+    let color1,color2,textColor;
     switch(role){
-        case "Gold":c1="#B8860B";c2="#FFD700";txt="#FFF8DC";break;
-        case "Silver":c1="#708090";c2="#C0C0C0";txt="#F0F8FF";break;
-        case "Bronze":c1="#8B4513";c2="#CD7F32";txt="#FFE4C4";break;
-        case "Iron":c1="#2F4F4F";c2="#708090";txt="#E0E0E0";break;
-        case "Explorer":c1="#008B8B";c2="#00D4FF";txt="#E0FFFF";break;
-        case "Content Creator Tier 1":c1="#CC5500";c2="#FF7A18";txt="#FFE5CC";break;
-        case "Content Creator Tier 2":c1="#CC7722";c2="#FF9F43";txt="#FFE5CC";break;
-        case "Content Creator Tier 3":c1="#CC8800";c2="#FFA500";txt="#FFF0D0";break;
-        case "Content Creator Tier 4":c1="#CCAA00";c2="#FFD166";txt="#FFF5DD";break;
-        default:c1="#444";c2="#666";txt="#EEE";
+        case "Gold":color1="#B8860B";color2="#FFD700";textColor="#FFF8DC";break;
+        case "Silver":color1="#708090";color2="#C0C0C0";textColor="#F0F8FF";break;
+        case "Bronze":color1="#8B4513";color2="#CD7F32";textColor="#FFE4C4";break;
+        case "Iron":color1="#2F4F4F";color2="#708090";textColor="#E0E0E0";break;
+        case "Explorer":color1="#008B8B";color2="#00D4FF";textColor="#E0FFFF";break;
+        case "Content Creator Tier 1":color1="#CC5500";color2="#FF7A18";textColor="#FFE5CC";break;
+        case "Content Creator Tier 2":color1="#CC7722";color2="#FF9F43";textColor="#FFE5CC";break;
+        case "Content Creator Tier 3":color1="#CC8800";color2="#FFA500";textColor="#FFF0D0";break;
+        case "Content Creator Tier 4":color1="#CCAA00";color2="#FFD166";textColor="#FFF5DD";break;
+        default:color1="#444";color2="#666";textColor="#EEE";
     }
     
-    const w=ctx.measureText(role).width+20;
-    if(x+w>canvas.width-20){x=180;y+=h+gap;}
+    const badgeWidth=ctx.measureText(role).width+20;
+    if(xStart+badgeWidth>canvas.width-20){
+        xStart=180;
+        yStart+=badgeHeight+badgeGap;
+    }
     
-    ctx.strokeStyle=c2;
+    ctx.strokeStyle=color2;
     ctx.lineWidth=2;
-    ctx.strokeRect(x,y,w,h);
+    ctx.strokeRect(xStart,yStart,badgeWidth,badgeHeight);
     
-    const g=ctx.createLinearGradient(x,y,x+w,y+h);
-    g.addColorStop(0,c1);
-    g.addColorStop(1,c2);
-    ctx.fillStyle=g;
-    ctx.fillRect(x,y,w,h);
+    const grad=ctx.createLinearGradient(xStart,yStart,xStart+badgeWidth,yStart+badgeHeight);
+    grad.addColorStop(0,color1);
+    grad.addColorStop(1,color2);
+    ctx.fillStyle=grad;
+    ctx.fillRect(xStart,yStart,badgeWidth,badgeHeight);
     
-    ctx.fillStyle=txt;
+    ctx.fillStyle=textColor;
     ctx.font="bold 14px Fredoka";
-    ctx.fillText(role,x+10,y+20);
-    x+=w+10;
+    ctx.fillText(role,xStart+10,yStart+20);
+
+    xStart+=badgeWidth+10;
 });
 
-// Функция загрузки изображений
-function loadImg(src,x,y,w,h,clip,cb){
+// Функция для безопасного рисования
+function drawImageSafe(src,x,y,w,h,clipRect=false,callback){
     const img=new Image();
     img.crossOrigin="anonymous";
     img.src=src;
-    img.onload=()=>{
-        if(clip){
+    img.onload=function(){
+        if(clipRect){
             ctx.save();
             ctx.beginPath();
-            ctx.arc(x+w/2,y+h/2,w/2,0,Math.PI*2);
+            ctx.roundRect(x,y,w,h,15);
             ctx.closePath();
             ctx.clip();
         }
         ctx.drawImage(img,x,y,w,h);
-        if(clip)ctx.restore();
-        if(cb)cb();
+        if(clipRect)ctx.restore();
+        if(callback)callback();
     };
-    img.onerror=()=>{if(cb)cb();};
+    img.onerror=function(){
+        if(callback)callback();
+    };
 }
 
 // 🔲 КВАДРАТНАЯ РАМКА ВОКРУГ АВАТАРА
-const avInput=document.getElementById("avatar");
+const avatarInput=document.getElementById("avatar");
 const avX=20,avY=60,avS=140,radius=15;
 
-if(avInput.files[0]){
+if(avatarInput.files[0]){
     const reader=new FileReader();
-    reader.onload=e=>{
+    reader.onload=function(e){
         // 1️⃣ РИСУЕМ КВАДРАТНУЮ РАМКУ
         ctx.save();
         ctx.beginPath();
@@ -117,16 +125,16 @@ if(avInput.files[0]){
         ctx.stroke();
         ctx.restore();
         
-        // 2️⃣ ОБРЕЗАЕМ АВАТАР ПО РАМКЕ (ЧТОБЫ НЕ ВЫХОДИЛ)
+        // 2️⃣ РИСУЕМ АВАТАР С ОБРЕЗКОЙ (ЧТОБЫ НЕ ВЫХОДИЛ)
         ctx.save();
         ctx.beginPath();
         ctx.roundRect(avX+4,avY+4,avS-8,avS-8,radius-2);
         ctx.closePath();
         ctx.clip();
-        loadImg(e.target.result,avX,avY,avS,avS,false,drawRest);
+        drawImageSafe(e.target.result,avX,avY,avS,avS,false,drawLogoAndQR);
         ctx.restore();
     };
-    reader.readAsDataURL(avInput.files[0]);
+    reader.readAsDataURL(avatarInput.files[0]);
 }else{
     // 1️⃣ РИСУЕМ РАМКУ
     ctx.save();
@@ -155,17 +163,17 @@ if(avInput.files[0]){
     ctx.textBaseline="alphabetic";
     ctx.restore();
     
-    drawRest();
+    drawLogoAndQR();
 }
 
-function drawRest(){
+function drawLogoAndQR(){
     // 🟠 ЛОГОТИП ORO СПРАВА СВЕРХУ
-    loadImg("https://ltdfoto.ru/images/2026/03/12/ORO.png",650,20,120,60);
+    drawImageSafe("https://ltdfoto.ru/images/2026/03/12/ORO.png",650,20,120,60);
     
-    // 📱 QR КОД СЛЕВА ВНИЗУ ПОД АВАТАРОМ (отступ 10px от низа)
+    // 📱 QR КОД СЛЕВА ВНИЗУ (ПОДНЯТ НА 15px ВВЕРХ)
     const qrSize=120;
-    const qrY=canvas.height-10-qrSize; // 400-10-120=270
-    loadImg("https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://getoro.xyz",20,qrY,qrSize,qrSize);
+    const qrY=canvas.height-25-qrSize; // 400-25-120=255 (поднят на 15px)
+    drawImageSafe("https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://getoro.xyz",20,qrY,qrSize,qrSize);
     
     // Подпись под QR
     ctx.fillStyle="rgba(255,255,255,0.7)";
@@ -174,13 +182,17 @@ function drawRest(){
     ctx.fillText("Scan to visit",80,qrY-5);
     ctx.fillText("getoro.xyz",80,canvas.height-5);
     ctx.textAlign="start";
+    
+    // 🔲 ЛОГОТИП ORO В ПРАВЫЙ НИЖНИЙ УГОЛ
+    drawImageSafe("https://ltdfoto.ru/images/2026/03/12/ORO.png",650,canvas.height-70,130,55);
 }
 }
 
+// Скачать
 function downloadCard(){
-    const c=document.getElementById("cardCanvas");
-    const a=document.createElement("a");
-    a.download="oro-card.png";
-    a.href=c.toDataURL();
-    a.click();
+const canvas=document.getElementById("cardCanvas");
+const link=document.createElement("a");
+link.download="oro-card.png";
+link.href=canvas.toDataURL();
+link.click();
 }
