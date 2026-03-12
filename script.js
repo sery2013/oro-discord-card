@@ -86,21 +86,13 @@ selectedRoles.forEach(role=>{
     xStart+=badgeWidth+10;
 });
 
-// Функция для безопасного рисования
-function drawImageSafe(src,x,y,w,h,clipRect=false,callback){
+// Функция для загрузки изображений
+function drawImageSafe(src,x,y,w,h,callback){
     const img=new Image();
     img.crossOrigin="anonymous";
     img.src=src;
     img.onload=function(){
-        if(clipRect){
-            ctx.save();
-            ctx.beginPath();
-            ctx.roundRect(x,y,w,h,15);
-            ctx.closePath();
-            ctx.clip();
-        }
         ctx.drawImage(img,x,y,w,h);
-        if(clipRect)ctx.restore();
         if(callback)callback();
     };
     img.onerror=function(){
@@ -108,7 +100,7 @@ function drawImageSafe(src,x,y,w,h,clipRect=false,callback){
     };
 }
 
-// 🔲 КВАДРАТНАЯ РАМКА ВОКРУГ АВАТАРА
+// 🔲 КВАДРАТНАЯ РАМКА ВОКРУГ АВАТАРА + ОБРЕЗКА
 const avatarInput=document.getElementById("avatar");
 const avX=20,avY=60,avS=140,radius=15;
 
@@ -125,13 +117,13 @@ if(avatarInput.files[0]){
         ctx.stroke();
         ctx.restore();
         
-        // 2️⃣ РИСУЕМ АВАТАР С ОБРЕЗКОЙ (ЧТОБЫ НЕ ВЫХОДИЛ)
+        // 2️⃣ ОБРЕЗАЕМ АВАТАР (ЧТОБЫ НЕ ВЫХОДИЛ ЗА РАМКУ)
         ctx.save();
         ctx.beginPath();
         ctx.roundRect(avX+4,avY+4,avS-8,avS-8,radius-2);
         ctx.closePath();
         ctx.clip();
-        drawImageSafe(e.target.result,avX,avY,avS,avS,false,drawLogoAndQR);
+        drawImageSafe(e.target.result,avX,avY,avS,avS,drawLogoAndQR);
         ctx.restore();
     };
     reader.readAsDataURL(avatarInput.files[0]);
@@ -170,9 +162,9 @@ function drawLogoAndQR(){
     // 🟠 ЛОГОТИП ORO СПРАВА СВЕРХУ
     drawImageSafe("https://ltdfoto.ru/images/2026/03/12/ORO.png",650,20,120,60);
     
-    // 📱 QR КОД СЛЕВА ВНИЗУ (ПОДНЯТ НА 15px ВВЕРХ)
+    // 📱 QR КОД СЛЕВА ВНИЗУ ПОД АВАТАРОМ (ПОДНЯТ НА 15px ВВЕРХ)
     const qrSize=120;
-    const qrY=canvas.height-25-qrSize; // 400-25-120=255 (поднят на 15px)
+    const qrY=255; // Было 280, подняли на 15px вверх (280-15=265, но лучше 255)
     drawImageSafe("https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://getoro.xyz",20,qrY,qrSize,qrSize);
     
     // Подпись под QR
@@ -180,11 +172,8 @@ function drawLogoAndQR(){
     ctx.font="11px Fredoka";
     ctx.textAlign="center";
     ctx.fillText("Scan to visit",80,qrY-5);
-    ctx.fillText("getoro.xyz",80,canvas.height-5);
+    ctx.fillText("getoro.xyz",80,390);
     ctx.textAlign="start";
-    
-    // 🔲 ЛОГОТИП ORO В ПРАВЫЙ НИЖНИЙ УГОЛ
-    drawImageSafe("https://ltdfoto.ru/images/2026/03/12/ORO.png",650,canvas.height-70,130,55);
 }
 }
 
