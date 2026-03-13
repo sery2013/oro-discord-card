@@ -19,6 +19,12 @@ function initDigitalFlow() {
 
 function generateCard() {
     const canvas = document.getElementById("cardCanvas");
+    const skeleton = document.getElementById("skeleton");
+    
+    // ПЕРЕКЛЮЧЕНИЕ: Показываем канвас и скрываем скелетон
+    if (canvas) canvas.style.display = "block";
+    if (skeleton) skeleton.style.display = "none";
+
     const ctx = canvas.getContext("2d");
 
     if (particles.length === 0) initDigitalFlow();
@@ -126,7 +132,7 @@ function renderAll(ctx, canvas, avatarImg) {
     }
     ctx.restore();
 
-    // --- 4. ОСНОВНЫЕ ЭЛЕМЕНТЫ (Твой оригинальный код) ---
+    // --- 4. ОСНОВНЫЕ ЭЛЕМЕНТЫ ---
     const avX = 25, avY = 70, avS = 140;
 
     // Аватар и рамка
@@ -249,7 +255,7 @@ function renderAll(ctx, canvas, avatarImg) {
     ctx.fillText("ORO", 760, 360);
     ctx.restore();
 
-    // QR CODE (Используем статический кэш, чтобы не мерцало)
+    // QR CODE
     const qrSrc = "https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://getoro.xyz";
     const qrImg = new Image();
     qrImg.crossOrigin = "anonymous";
@@ -268,6 +274,7 @@ function downloadCard() {
     link.href = canvas.toDataURL("image/png");
     link.click();
 }
+
 // --- АНИМАЦИЯ ЖИВОГО ФОНА (БЕЗОПАСНАЯ) ---
 (function() {
     const bgCanvas = document.getElementById("bgCanvas");
