@@ -39,10 +39,10 @@ body {
 }
 
 .title {
-    text-align: center;
+    text-align: left; /* Исправлено: заголовок теперь слева */
     font-size: 36px;
     margin: 0;
-    padding: 15px 30px;
+    padding: 15px 0 15px 40px; /* Исправлено: добавлен отступ слева, чтобы не прилипал к краю */
     /* Только текст остается градиентным */
     background: linear-gradient(90deg, #ffcc00, #ff7a18);
     -webkit-background-clip: text;
@@ -58,7 +58,7 @@ body {
     content: "ORO USER CARD"; 
     position: absolute;
     top: 0;
-    left: 0;
+    left: 40px; /* Совмещаем глитч с новым отступом заголовка */
     width: 100%;
     height: 100%;
     opacity: 0.8;
@@ -134,6 +134,12 @@ body {
     font-family: 'Fredoka', sans-serif;
     box-sizing: border-box;
     transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Исправлено: Белая иконка календаря */
+.panel input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
 }
 
 .panel input[type="text"]:focus,
@@ -309,8 +315,4 @@ canvas#cardCanvas {
     .container { flex-direction: column; align-items: center; }
     .panel { width: 100%; max-width: 340px; }
     .preview-section { width: 100%; }
-}
-/* Делает иконку календаря в поле даты белой */
-.panel input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
 }
