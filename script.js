@@ -2,6 +2,7 @@
 let particles = [];
 let animationId = null;
 let scanLineY = 0;
+let currentAvatarImg = null; // Кэшируем аватар для Live Preview
 
 // Инициализация "цифровых полос"
 function initDigitalFlow() {
@@ -17,6 +18,7 @@ function initDigitalFlow() {
     }
 }
 
+// ГЛАВНАЯ ФУНКЦИЯ (ВЫЗЫВАЕТСЯ КНОПКОЙ)
 function generateCard() {
     const canvas = document.getElementById("cardCanvas");
     const skeleton = document.getElementById("skeleton");
@@ -31,15 +33,14 @@ function generateCard() {
     if (animationId) cancelAnimationFrame(animationId);
 
     const avatarInput = document.getElementById("avatar");
-    let avatarImg = null;
 
-    // Загрузка аватара перед стартом цикла
+    // Загрузка аватара
     if (avatarInput.files && avatarInput.files[0]) {
         const reader = new FileReader();
         reader.onload = (e) => {
             const img = new Image();
             img.onload = () => {
-                avatarImg = img;
+                currentAvatarImg = img;
                 startLoop();
             };
             img.src = e.target.result;
@@ -51,16 +52,36 @@ function generateCard() {
 
     function startLoop() {
         function frame() {
-            renderAll(ctx, canvas, avatarImg);
+            renderAll(ctx, canvas, currentAvatarImg);
             animationId = requestAnimationFrame(frame);
         }
         animationId = requestAnimationFrame(frame);
     }
 }
 
-// ОСНОВНАЯ ФУНКЦИЯ ОТРИСОВКИ (ТВОЙ ПОЛНЫЙ КОД)
+// --- LIVE PREVIEW ЛОГИКА ---
+// Добавляем слушатели событий на поля ввода, чтобы карточка обновлялась при печати
+document.addEventListener("DOMContentLoaded", () => {
+    const inputs = ["username", "date", "userBio"];
+    inputs.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener("input", () => {
+                const canvas = document.getElementById("cardCanvas");
+                // Если канвас уже виден (генерация была), он будет обновляться сам в цикле
+                // Если нет — можно просто оставить как есть
+            });
+        }
+    });
+
+    // Слушатель для чекбоксов ролей
+    document.querySelector(".roles")?.addEventListener("change", () => {
+        // Обновление подхватится автоматически в следующем кадре анимации
+    });
+});
+
+// ОСНОВНАЯ ФУНКЦИЯ ОТРИСОВКИ
 function renderAll(ctx, canvas, avatarImg) {
-    // Сброс настроек
     ctx.textAlign = "left";
     ctx.textBaseline = "alphabetic";
     ctx.shadowBlur = 0;
@@ -103,13 +124,12 @@ function renderAll(ctx, canvas, avatarImg) {
         ctx.beginPath(); ctx.arc(p.x, p.y + p.length, 1, 0, Math.PI * 2); ctx.fill();
     });
 
-    // Сканирующая линия
     scanLineY += 1.2;
     if (scanLineY > 400) scanLineY = 0;
     ctx.fillStyle = "rgba(255, 122, 24, 0.04)";
     ctx.fillRect(0, scanLineY, canvas.width, 1.5);
 
-    // --- 3. СТАТИЧНЫЕ ДЕКОРАЦИИ (Сетка и ORO) ---
+    // --- 3. СТАТИЧНЫЕ ДЕКОРАЦИИ ---
     ctx.save();
     ctx.fillStyle = "rgba(255, 255, 255, 0.03)";
     for (let x = 0; x < canvas.width; x += 30) {
@@ -135,7 +155,7 @@ function renderAll(ctx, canvas, avatarImg) {
     // --- 4. ОСНОВНЫЕ ЭЛЕМЕНТЫ ---
     const avX = 25, avY = 70, avS = 140;
 
-    // Аватар и рамка
+    // Аватар
     ctx.save();
     ctx.strokeStyle = "rgba(255, 122, 24, 0.7)";
     ctx.strokeRect(avX, avY, avS, avS);
@@ -147,7 +167,6 @@ function renderAll(ctx, canvas, avatarImg) {
     }
     ctx.restore();
 
-    // Заголовок
     ctx.save();
     ctx.fillStyle = "white";
     ctx.font = "bold 30px Fredoka";
@@ -156,7 +175,7 @@ function renderAll(ctx, canvas, avatarImg) {
     ctx.fillText("USER CARD", 25, 45);
     ctx.restore();
 
-    // Верхняя линия
+    // Линия
     ctx.save();
     const lineGrad = ctx.createLinearGradient(275, 0, 765, 0);
     lineGrad.addColorStop(0, "rgba(255, 122, 24, 0)");
@@ -171,7 +190,7 @@ function renderAll(ctx, canvas, avatarImg) {
     const date = document.getElementById("date").value || "2026-03-12";
     const bioText = document.getElementById("userBio").value || "Web3 Explorer & Content Enthusiast";
 
-    // Username & Date
+    // Поля данных
     ctx.save();
     ctx.strokeStyle = "rgba(255, 122, 24, 0.3)";
     ctx.strokeRect(185, 65, 580, 50);
@@ -275,7 +294,7 @@ function downloadCard() {
     link.click();
 }
 
-// --- АНИМАЦИЯ ЖИВОГО ФОНА (БЕЗОПАСНАЯ) ---
+// --- АНИМАЦИЯ ЖИВОГО ФОНА САЙТА ---
 (function() {
     const bgCanvas = document.getElementById("bgCanvas");
     if (!bgCanvas) return;
