@@ -2,10 +2,9 @@
 let particles = [];
 let animationId = null;
 let scanLineY = 0;
-let isGenerating = false; // Флаг для анимации сканирования
-let currentAvatarImg = null; // Кэшируем аватар для Live Preview
+let isGenerating = false; 
+let currentAvatarImg = null; 
 
-// Инициализация "цифровых полос"
 function initDigitalFlow() {
     particles = [];
     for (let i = 0; i < 50; i++) {
@@ -19,21 +18,46 @@ function initDigitalFlow() {
     }
 }
 
-// ГЛАВНАЯ ФУНКЦИЯ (ВЫЗЫВАЕТСЯ КНОПКОЙ)
+// --- ФУНКЦИЯ НАКЛОНА (TILT EFFECT) ---
+function initTilt() {
+    const canvas = document.getElementById("cardCanvas");
+    if (!canvas) return;
+
+    document.addEventListener("mousemove", (e) => {
+        if (canvas.style.display === "none") return;
+
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        // Определяем центр
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        // Вычисляем угол наклона (макс. 10 градусов)
+        const rotateX = (-(y - centerY) / centerY) * 10;
+        const rotateY = ((x - centerX) / centerX) * 10;
+
+        canvas.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+
+    // Сброс наклона, когда мышь уходит
+    canvas.addEventListener("mouseleave", () => {
+        canvas.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+    });
+}
+
 function generateCard() {
     const canvas = document.getElementById("cardCanvas");
     const skeleton = document.getElementById("skeleton");
     
-    // ПЕРЕКЛЮЧЕНИЕ: Показываем канвас и скрываем скелетон
     if (canvas) canvas.style.display = "block";
     if (skeleton) skeleton.style.display = "none";
 
-    // --- ЗАПУСК АНИМАЦИИ ГЕНЕРАЦИИ ---
     isGenerating = true;
     canvas.classList.add("canvas-generating");
     scanLineY = 0; 
 
-    // Эффект длится 2.5 секунды
     setTimeout(() => {
         isGenerating = false;
         canvas.classList.remove("canvas-generating");
@@ -46,7 +70,6 @@ function generateCard() {
 
     const avatarInput = document.getElementById("avatar");
 
-    // Загрузка аватара
     if (avatarInput.files && avatarInput.files[0]) {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -69,26 +92,23 @@ function generateCard() {
         }
         animationId = requestAnimationFrame(frame);
     }
+    
+    // Инициализируем наклон один раз
+    initTilt();
 }
 
-// --- LIVE PREVIEW ЛОГИКА ---
 document.addEventListener("DOMContentLoaded", () => {
     const inputs = ["username", "date", "userBio"];
     inputs.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
-            el.addEventListener("input", () => {
-                // Обновление подхватится автоматически в цикле
-            });
+            el.addEventListener("input", () => {});
         }
     });
 
-    document.querySelector(".roles")?.addEventListener("change", () => {
-        // Обновление подхватится автоматически
-    });
+    document.querySelector(".roles")?.addEventListener("change", () => {});
 });
 
-// ОСНОВНАЯ ФУНКЦИЯ ОТРИСОВКИ
 function renderAll(ctx, canvas, avatarImg) {
     ctx.textAlign = "left";
     ctx.textBaseline = "alphabetic";
@@ -96,7 +116,6 @@ function renderAll(ctx, canvas, avatarImg) {
     ctx.shadowColor = "transparent";
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // --- 1. СЛОЖНЫЙ ГРАДИЕНТНЫЙ ФОН ---
     ctx.fillStyle = '#050508';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -112,32 +131,26 @@ function renderAll(ctx, canvas, avatarImg) {
     ctx.fillStyle = bottomGrad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // --- 2. ЖИВАЯ АНИМАЦИЯ (ПОЛОСЫ И ТОЧКИ) ---
     particles.forEach(p => {
         p.y += p.speed;
         if (p.y > 400) p.y = -p.length;
-        
         const g = ctx.createLinearGradient(0, p.y, 0, p.y + p.length);
         g.addColorStop(0, 'transparent');
         g.addColorStop(1, `rgba(255, 122, 24, ${p.opacity})`);
-        
         ctx.strokeStyle = g;
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(p.x, p.y);
         ctx.lineTo(p.x, p.y + p.length);
         ctx.stroke();
-
         ctx.fillStyle = `rgba(255, 122, 24, ${p.opacity * 2})`;
         ctx.beginPath(); ctx.arc(p.x, p.y + p.length, 1, 0, Math.PI * 2); ctx.fill();
     });
 
-    // Фоновая линия (медленная)
     let staticScanY = (Date.now() * 0.05) % 400;
     ctx.fillStyle = "rgba(255, 122, 24, 0.04)";
     ctx.fillRect(0, staticScanY, canvas.width, 1.5);
 
-    // --- 3. СТАТИЧНЫЕ ДЕКОРАЦИИ ---
     ctx.save();
     ctx.fillStyle = "rgba(255, 255, 255, 0.03)";
     for (let x = 0; x < canvas.width; x += 30) {
@@ -145,7 +158,6 @@ function renderAll(ctx, canvas, avatarImg) {
             ctx.beginPath(); ctx.arc(x, y, 0.8, 0, Math.PI * 2); ctx.fill();
         }
     }
-
     ctx.fillStyle = "rgba(255, 122, 24, 0.04)";
     ctx.font = "bold 40px Fredoka";
     const symbols = ["( )", "ORO", "*", "◇"];
@@ -160,10 +172,7 @@ function renderAll(ctx, canvas, avatarImg) {
     }
     ctx.restore();
 
-    // --- 4. ОСНОВНЫЕ ЭЛЕМЕНТЫ ---
     const avX = 25, avY = 70, avS = 140;
-
-    // Аватар
     ctx.save();
     ctx.strokeStyle = "rgba(255, 122, 24, 0.7)";
     ctx.strokeRect(avX, avY, avS, avS);
@@ -183,7 +192,6 @@ function renderAll(ctx, canvas, avatarImg) {
     ctx.fillText("USER CARD", 25, 45);
     ctx.restore();
 
-    // Линия под заголовком
     ctx.save();
     const lineGrad = ctx.createLinearGradient(275, 0, 765, 0);
     lineGrad.addColorStop(0, "rgba(255, 122, 24, 0)");
@@ -198,7 +206,6 @@ function renderAll(ctx, canvas, avatarImg) {
     const date = document.getElementById("date").value || "2026-03-12";
     const bioText = document.getElementById("userBio").value || "Web3 Explorer & Content Enthusiast";
 
-    // Поля данных
     ctx.save();
     ctx.strokeStyle = "rgba(255, 122, 24, 0.3)";
     ctx.strokeRect(185, 65, 580, 50);
@@ -211,12 +218,9 @@ function renderAll(ctx, canvas, avatarImg) {
     ctx.fillText("Joined: " + date, 205, 152);
     ctx.restore();
 
-    // РОЛИ
     ctx.save();
-    const roleCheckboxes = document.querySelectorAll(".roles input[type='checkbox']");
-    const selectedRoles = Array.from(roleCheckboxes).filter(chk => chk.checked).map(chk => chk.value);
+    const selectedRoles = Array.from(document.querySelectorAll(".roles input[type='checkbox']")).filter(chk => chk.checked).map(chk => chk.value);
     let xStart = 185, yStart = 180;
-
     selectedRoles.forEach(role => {
         let c1, c2;
         if (role === "Gold") { c1="#B8860B"; c2="#FFD700"; }
@@ -226,7 +230,6 @@ function renderAll(ctx, canvas, avatarImg) {
         else if (role.includes("Tier 3")) { c1="#996600"; c2="#ffaa00"; }
         else if (role.includes("Tier 4")) { c1="#808000"; c2="#bdb76b"; }
         else { c1="#2a2b3d"; c2="#4a4b5d"; }
-
         ctx.font = "bold 13px Fredoka";
         const bWidth = ctx.measureText(role).width + 26;
         if(xStart + bWidth > canvas.width - 20) { xStart = 185; yStart += 35; }
@@ -239,7 +242,6 @@ function renderAll(ctx, canvas, avatarImg) {
     });
     ctx.restore();
 
-    // BIO
     ctx.save();
     const bioY = yStart + 45;
     ctx.strokeStyle = "rgba(255, 122, 24, 0.3)";
@@ -250,7 +252,6 @@ function renderAll(ctx, canvas, avatarImg) {
     ctx.fillText(bioText, 205, bioY + 28);
     ctx.restore();
 
-    // СОЦСЕТИ
     ctx.save();
     const sY = bioY + 105;
     ctx.font = "14px Fredoka"; ctx.fillStyle = "white";
@@ -271,7 +272,6 @@ function renderAll(ctx, canvas, avatarImg) {
     ctx.fillText("🌐 getoro.xyz", 505, sY);
     ctx.restore();
 
-    // ЛОГО ORO
     ctx.save();
     ctx.textAlign = "right";
     const pulse = 10 + Math.sin(Date.now() / 500) * 8;
@@ -282,7 +282,6 @@ function renderAll(ctx, canvas, avatarImg) {
     ctx.fillText("ORO", 760, 360);
     ctx.restore();
 
-    // QR CODE
     const qrSrc = "https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://getoro.xyz";
     const qrImg = new Image();
     qrImg.crossOrigin = "anonymous";
@@ -293,28 +292,20 @@ function renderAll(ctx, canvas, avatarImg) {
         ctx.fillText("getoro.xyz", 95, 380);
     }
 
-    // --- 5. ЭФФЕКТ СКАНИРОВАНИЯ (ТОЛЬКО ПРИ ГЕНЕРАЦИИ) ---
     if (isGenerating) {
-        scanLineY += 8; // Скорость сканирования
+        scanLineY += 8;
         if (scanLineY > 400) scanLineY = 0;
-
         ctx.save();
-        // Светящийся шлейф за линией
         let scanGrad = ctx.createLinearGradient(0, scanLineY - 40, 0, scanLineY);
         scanGrad.addColorStop(0, "transparent");
         scanGrad.addColorStop(1, "rgba(255, 122, 24, 0.4)");
         ctx.fillStyle = scanGrad;
         ctx.fillRect(0, scanLineY - 40, canvas.width, 40);
-
-        // Сама линия
         ctx.strokeStyle = "#ffcc00";
         ctx.lineWidth = 2;
         ctx.shadowBlur = 15;
         ctx.shadowColor = "#ff7a18";
-        ctx.beginPath();
-        ctx.moveTo(0, scanLineY);
-        ctx.lineTo(canvas.width, scanLineY);
-        ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, scanLineY); ctx.lineTo(canvas.width, scanLineY); ctx.stroke();
         ctx.restore();
     }
 }
@@ -327,7 +318,6 @@ function downloadCard() {
     link.click();
 }
 
-// --- АНИМАЦИЯ ЖИВОГО ФОНА САЙТА ---
 (function() {
     const bgCanvas = document.getElementById("bgCanvas");
     if (!bgCanvas) return;
