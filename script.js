@@ -2,6 +2,7 @@
 let particles = [];
 let animationId = null;
 let scanLineY = 0;
+let isGenerating = false; // Флаг для анимации сканирования
 let currentAvatarImg = null; // Кэшируем аватар для Live Preview
 
 // Инициализация "цифровых полос"
@@ -26,6 +27,17 @@ function generateCard() {
     // ПЕРЕКЛЮЧЕНИЕ: Показываем канвас и скрываем скелетон
     if (canvas) canvas.style.display = "block";
     if (skeleton) skeleton.style.display = "none";
+
+    // --- ЗАПУСК АНИМАЦИИ ГЕНЕРАЦИИ ---
+    isGenerating = true;
+    canvas.classList.add("canvas-generating");
+    scanLineY = 0; 
+
+    // Эффект длится 2.5 секунды
+    setTimeout(() => {
+        isGenerating = false;
+        canvas.classList.remove("canvas-generating");
+    }, 2500);
 
     const ctx = canvas.getContext("2d");
 
@@ -60,23 +72,19 @@ function generateCard() {
 }
 
 // --- LIVE PREVIEW ЛОГИКА ---
-// Добавляем слушатели событий на поля ввода, чтобы карточка обновлялась при печати
 document.addEventListener("DOMContentLoaded", () => {
     const inputs = ["username", "date", "userBio"];
     inputs.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
             el.addEventListener("input", () => {
-                const canvas = document.getElementById("cardCanvas");
-                // Если канвас уже виден (генерация была), он будет обновляться сам в цикле
-                // Если нет — можно просто оставить как есть
+                // Обновление подхватится автоматически в цикле
             });
         }
     });
 
-    // Слушатель для чекбоксов ролей
     document.querySelector(".roles")?.addEventListener("change", () => {
-        // Обновление подхватится автоматически в следующем кадре анимации
+        // Обновление подхватится автоматически
     });
 });
 
@@ -124,10 +132,10 @@ function renderAll(ctx, canvas, avatarImg) {
         ctx.beginPath(); ctx.arc(p.x, p.y + p.length, 1, 0, Math.PI * 2); ctx.fill();
     });
 
-    scanLineY += 1.2;
-    if (scanLineY > 400) scanLineY = 0;
+    // Фоновая линия (медленная)
+    let staticScanY = (Date.now() * 0.05) % 400;
     ctx.fillStyle = "rgba(255, 122, 24, 0.04)";
-    ctx.fillRect(0, scanLineY, canvas.width, 1.5);
+    ctx.fillRect(0, staticScanY, canvas.width, 1.5);
 
     // --- 3. СТАТИЧНЫЕ ДЕКОРАЦИИ ---
     ctx.save();
@@ -175,7 +183,7 @@ function renderAll(ctx, canvas, avatarImg) {
     ctx.fillText("USER CARD", 25, 45);
     ctx.restore();
 
-    // Линия
+    // Линия под заголовком
     ctx.save();
     const lineGrad = ctx.createLinearGradient(275, 0, 765, 0);
     lineGrad.addColorStop(0, "rgba(255, 122, 24, 0)");
@@ -283,6 +291,31 @@ function renderAll(ctx, canvas, avatarImg) {
         ctx.drawImage(qrImg, 35, 245, 120, 120);
         ctx.fillStyle = "rgba(255,255,255,0.3)"; ctx.font = "10px Fredoka"; ctx.textAlign = "center";
         ctx.fillText("getoro.xyz", 95, 380);
+    }
+
+    // --- 5. ЭФФЕКТ СКАНИРОВАНИЯ (ТОЛЬКО ПРИ ГЕНЕРАЦИИ) ---
+    if (isGenerating) {
+        scanLineY += 8; // Скорость сканирования
+        if (scanLineY > 400) scanLineY = 0;
+
+        ctx.save();
+        // Светящийся шлейф за линией
+        let scanGrad = ctx.createLinearGradient(0, scanLineY - 40, 0, scanLineY);
+        scanGrad.addColorStop(0, "transparent");
+        scanGrad.addColorStop(1, "rgba(255, 122, 24, 0.4)");
+        ctx.fillStyle = scanGrad;
+        ctx.fillRect(0, scanLineY - 40, canvas.width, 40);
+
+        // Сама линия
+        ctx.strokeStyle = "#ffcc00";
+        ctx.lineWidth = 2;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = "#ff7a18";
+        ctx.beginPath();
+        ctx.moveTo(0, scanLineY);
+        ctx.lineTo(canvas.width, scanLineY);
+        ctx.stroke();
+        ctx.restore();
     }
 }
 
