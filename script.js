@@ -268,3 +268,41 @@ function downloadCard() {
     link.href = canvas.toDataURL("image/png");
     link.click();
 }
+// --- АНИМАЦИЯ ЖИВОГО ФОНА (БЕЗОПАСНАЯ) ---
+(function() {
+    const bgCanvas = document.getElementById("bgCanvas");
+    if (!bgCanvas) return;
+    const bgCtx = bgCanvas.getContext("2d");
+    let bgLines = [];
+
+    function init() {
+        bgCanvas.width = window.innerWidth;
+        bgCanvas.height = window.innerHeight;
+        bgLines = Array.from({ length: 60 }, () => ({
+            x: Math.random() * bgCanvas.width,
+            y: Math.random() * bgCanvas.height,
+            speed: Math.random() * 1 + 0.5,
+            len: Math.random() * 100 + 50,
+            op: Math.random() * 0.3
+        }));
+    }
+
+    function animate() {
+        bgCtx.fillStyle = '#050508';
+        bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
+        bgLines.forEach(l => {
+            l.y += l.speed;
+            if (l.y > bgCanvas.height) { l.y = -l.len; l.x = Math.random() * bgCanvas.width; }
+            let g = bgCtx.createLinearGradient(0, l.y, 0, l.y + l.len);
+            g.addColorStop(0, 'transparent');
+            g.addColorStop(1, `rgba(255, 122, 24, ${l.op})`);
+            bgCtx.strokeStyle = g;
+            bgCtx.beginPath(); bgCtx.moveTo(l.x, l.y); bgCtx.lineTo(l.x, l.y + l.len); bgCtx.stroke();
+        });
+        requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', init);
+    init();
+    animate();
+})();
