@@ -1,6 +1,13 @@
 function generateCard() {
     const canvas = document.getElementById("cardCanvas");
     const ctx = canvas.getContext("2d");
+
+    // СБРОС НАСТРОЕК (чтобы при повторном нажатии текст не съезжал влево)
+    ctx.textAlign = "left";
+    ctx.textBaseline = "alphabetic";
+    ctx.shadowBlur = 0;
+    ctx.shadowColor = "transparent";
+    
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // 1. ФОН
@@ -25,7 +32,7 @@ function generateCard() {
     const avX = 25, avY = 70, avS = 140;
 
     function drawFinalLayer() {
-        // --- ЗАГОЛОВОК ---
+        // --- ЗАГОЛОВОК (USER CARD) ---
         ctx.save();
         ctx.fillStyle = "white";
         ctx.font = "bold 30px Fredoka";
@@ -34,19 +41,22 @@ function generateCard() {
         ctx.fillText("USER CARD", 25, 45);
         ctx.restore();
 
+        // Верхняя линия
+        ctx.save();
         ctx.strokeStyle = "rgba(255, 122, 24, 0.5)";
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(275, 35);
         ctx.lineTo(765, 35);
         ctx.stroke();
+        ctx.restore();
 
         const username = document.getElementById("username").value || "sery2013";
         const date = document.getElementById("date").value || "2026-03-12";
-        // Получаем текст из нового поля Bio
         const bioText = document.getElementById("userBio").value || "Web3 Explorer & Content Enthusiast";
 
-        // Username & Date
+        // --- USERNAME & DATE ---
+        ctx.save();
         ctx.strokeStyle = "rgba(255, 122, 24, 0.5)";
         ctx.strokeRect(185, 65, 580, 50);
         ctx.fillStyle = "white";
@@ -58,8 +68,10 @@ function generateCard() {
         ctx.fillStyle = "#aaa";
         ctx.font = "18px Fredoka";
         ctx.fillText("Joined: " + date, 205, 152);
+        ctx.restore();
 
         // --- РОЛИ ---
+        ctx.save();
         const roleCheckboxes = document.querySelectorAll(".roles input[type='checkbox']");
         const selectedRoles = Array.from(roleCheckboxes).filter(chk => chk.checked).map(chk => chk.value);
         let xStart = 185, yStart = 180;
@@ -80,22 +92,29 @@ function generateCard() {
             const g = ctx.createLinearGradient(xStart, yStart, xStart, yStart + 25);
             g.addColorStop(0, c2); g.addColorStop(1, c1);
             ctx.fillStyle = g;
-            ctx.beginPath(); ctx.roundRect(xStart, yStart, bWidth, 25, 6); ctx.fill();
-            ctx.fillStyle = "white"; ctx.fillText(role, xStart + 13, yStart + 17);
+            ctx.beginPath(); 
+            ctx.roundRect(xStart, yStart, bWidth, 25, 6); 
+            ctx.fill();
+            ctx.fillStyle = "white"; 
+            ctx.fillText(role, xStart + 13, yStart + 17);
             xStart += bWidth + 10;
         });
+        ctx.restore();
 
-        // --- BIO (Теперь динамический) ---
+        // --- BIO (Динамический) ---
+        ctx.save();
         const bioY = yStart + 45;
         ctx.strokeStyle = "rgba(255, 122, 24, 0.5)";
         ctx.strokeRect(185, bioY, 580, 45);
-        ctx.fillStyle = "rgba(20, 21, 31, 0.4)"; // Полупрозрачный фон для текста
+        ctx.fillStyle = "rgba(20, 21, 31, 0.4)"; 
         ctx.fillRect(185, bioY, 580, 45);
         ctx.fillStyle = "#eee";
         ctx.font = "italic 16px Fredoka";
         ctx.fillText(bioText, 205, bioY + 28);
+        ctx.restore();
 
         // --- СОЦИАЛЬНЫЕ СЕТИ ---
+        ctx.save();
         const sY = bioY + 105; 
         ctx.font = "14px Fredoka";
         ctx.fillStyle = "white";
@@ -118,30 +137,41 @@ function generateCard() {
         drawIcon(285, sY, "#0088cc", 'tg'); ctx.fillText("Telegram", 307, sY);
         drawIcon(395, sY, "#5865F2", 'dc'); ctx.fillText("Discord", 417, sY);
         ctx.fillText("🌐 getoro.xyz", 505, sY);
+        ctx.restore();
 
-        // --- ЛОГО И QR ---
+        // --- ЛОГО (ORO) ---
         ctx.save();
-        ctx.textAlign = "right";
-        ctx.fillStyle = "white"; ctx.font = "bold 50px Fredoka";
-        ctx.shadowColor = "#ff7a18"; ctx.shadowBlur = 15;
+        ctx.textAlign = "right"; // Это выравнивание больше не "сломает" остальные части
+        ctx.fillStyle = "white"; 
+        ctx.font = "bold 50px Fredoka";
+        ctx.shadowColor = "#ff7a18"; 
+        ctx.shadowBlur = 15;
         ctx.fillText("ORO", 760, 360);
         ctx.restore();
 
+        // --- QR ---
         const qr = new Image();
         qr.crossOrigin = "anonymous";
         qr.onload = () => {
+            ctx.save();
             ctx.drawImage(qr, 35, 245, 120, 120);
             ctx.fillStyle = "rgba(255,255,255,0.3)";
-            ctx.font = "10px Fredoka"; ctx.textAlign = "center";
+            ctx.font = "10px Fredoka"; 
+            ctx.textAlign = "center";
             ctx.fillText("getoro.xyz", 95, 380);
+            ctx.restore();
         };
         qr.src = "https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://getoro.xyz";
     }
 
     const avatarInput = document.getElementById("avatar");
+    
+    // Рамка аватара
+    ctx.save();
     ctx.strokeStyle = "rgba(255, 122, 24, 0.7)";
     ctx.lineWidth = 1;
     ctx.strokeRect(avX, avY, avS, avS);
+    ctx.restore();
 
     if (avatarInput.files[0]) {
         const reader = new FileReader();
@@ -155,11 +185,13 @@ function generateCard() {
         };
         reader.readAsDataURL(avatarInput.files[0]);
     } else {
+        // Если нет аватара, рисуем пустую рамку
+        ctx.fillStyle = "#1a1a2e";
+        ctx.fillRect(avX + 1, avY + 1, avS - 2, avS - 2);
         drawFinalLayer();
     }
 }
 
-// Не забудьте функцию скачивания, если она была в вашем файле
 function downloadCard() {
     const canvas = document.getElementById("cardCanvas");
     const link = document.createElement("a");
