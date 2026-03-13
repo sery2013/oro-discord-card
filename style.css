@@ -328,3 +328,41 @@ canvas {
     10% { transform: skew(-1deg); }
     100% { transform: skew(0deg); }
 }
+/* Скелетон для канваса */
+.canvas-loader {
+    position: relative;
+    width: 800px;
+    height: 400px;
+    max-width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed rgba(255, 122, 24, 0.3);
+}
+
+.canvas-loader::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgba(255, 122, 24, 0.1), transparent);
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    100% { transform: translateX(100%); }
+}
+
+/* Скрываем канвас, пока нет генерации */
+#cardCanvas[style*="display: none"] + .canvas-loader {
+    display: flex;
+}
+#cardCanvas:not([style*="display: none"]) + .canvas-loader {
+    display: none;
+}
