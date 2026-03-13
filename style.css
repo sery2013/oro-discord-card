@@ -310,3 +310,7 @@ canvas#cardCanvas {
     .panel { width: 100%; max-width: 340px; }
     .preview-section { width: 100%; }
 }
+/* Делает иконку календаря в поле даты белой */
+.panel input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
