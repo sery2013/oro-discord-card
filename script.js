@@ -2,7 +2,7 @@ function generateCard() {
     const canvas = document.getElementById("cardCanvas");
     const ctx = canvas.getContext("2d");
 
-    // СБРОС НАСТРОЕК (чтобы при повторном нажатии текст не съезжал влево)
+    // СБРОС НАСТРОЕК (чтобы при повторном нажатии текст не съезжал)
     ctx.textAlign = "left";
     ctx.textBaseline = "alphabetic";
     ctx.shadowBlur = 0;
@@ -10,21 +10,49 @@ function generateCard() {
     
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // 1. ФОН
-    const bgGrad = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, 100, canvas.width / 2, canvas.height / 2, 500);
-    bgGrad.addColorStop(0, '#0d0e1a');
-    bgGrad.addColorStop(1, '#050508');
-    ctx.fillStyle = bgGrad;
+    // --- 1. СЛОЖНЫЙ ГРАДИЕНТНЫЙ ФОН ---
+    // Основная темная подложка
+    ctx.fillStyle = '#050508';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // 2. ПАТТЕРН
+    // Мягкое свечение сверху справа
+    const topGrad = ctx.createRadialGradient(canvas.width, 0, 50, canvas.width, 0, 400);
+    topGrad.addColorStop(0, 'rgba(255, 122, 24, 0.15)');
+    topGrad.addColorStop(1, 'rgba(255, 122, 24, 0)');
+    ctx.fillStyle = topGrad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Глубокий синий акцент снизу слева
+    const bottomGrad = ctx.createRadialGradient(0, canvas.height, 50, 0, canvas.height, 500);
+    bottomGrad.addColorStop(0, 'rgba(0, 212, 255, 0.1)');
+    bottomGrad.addColorStop(1, 'rgba(0, 212, 255, 0)');
+    ctx.fillStyle = bottomGrad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // --- 2. ДЕКОРАТИВНЫЕ ЭФФЕКТЫ (Паттерн и символы) ---
     ctx.save();
-    ctx.fillStyle = "rgba(255, 122, 24, 0.03)";
-    ctx.font = "bold 35px Fredoka";
-    const pattern = ["( )", "*", "ORO", "( )", "*"];
-    for (let i = 0; i < 8; i++) {
-        for (let j = 0; j < 5; j++) {
-            ctx.fillText(pattern[(i + j) % pattern.length], i * 130 - 20, j * 100 + 40);
+    
+    // Рисуем фоновую сетку (точки)
+    ctx.fillStyle = "rgba(255, 255, 255, 0.03)";
+    for (let x = 0; x < canvas.width; x += 30) {
+        for (let y = 0; y < canvas.height; y += 30) {
+            ctx.beginPath();
+            ctx.arc(x, y, 0.8, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    // Рисуем полупрозрачные символы ORO
+    ctx.fillStyle = "rgba(255, 122, 24, 0.04)";
+    ctx.font = "bold 40px Fredoka";
+    const symbols = ["( )", "ORO", "*", "◇", "ORO"];
+    for (let i = 0; i < 10; i++) {
+        for (let j = 0; j < 6; j++) {
+            ctx.save();
+            ctx.translate(i * 120, j * 90);
+            ctx.rotate(-Math.PI / 10); // Легкий наклон для динамики
+            ctx.fillText(symbols[(i + j) % symbols.length], 0, 0);
+            ctx.restore();
         }
     }
     ctx.restore();
@@ -32,18 +60,22 @@ function generateCard() {
     const avX = 25, avY = 70, avS = 140;
 
     function drawFinalLayer() {
-        // --- ЗАГОЛОВОК (USER CARD) ---
+        // --- ЗАГОЛОВОК ---
         ctx.save();
         ctx.fillStyle = "white";
         ctx.font = "bold 30px Fredoka";
-        ctx.shadowColor = "#ff7a18";
+        ctx.shadowColor = "rgba(255, 122, 24, 0.6)";
         ctx.shadowBlur = 15;
         ctx.fillText("USER CARD", 25, 45);
         ctx.restore();
 
-        // Верхняя линия
+        // Верхняя линия с градиентом
         ctx.save();
-        ctx.strokeStyle = "rgba(255, 122, 24, 0.5)";
+        const lineGrad = ctx.createLinearGradient(275, 0, 765, 0);
+        lineGrad.addColorStop(0, "rgba(255, 122, 24, 0)");
+        lineGrad.addColorStop(0.5, "rgba(255, 122, 24, 0.5)");
+        lineGrad.addColorStop(1, "rgba(255, 122, 24, 0)");
+        ctx.strokeStyle = lineGrad;
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(275, 35);
@@ -57,13 +89,13 @@ function generateCard() {
 
         // --- USERNAME & DATE ---
         ctx.save();
-        ctx.strokeStyle = "rgba(255, 122, 24, 0.5)";
+        ctx.strokeStyle = "rgba(255, 122, 24, 0.3)";
         ctx.strokeRect(185, 65, 580, 50);
         ctx.fillStyle = "white";
         ctx.font = "bold 24px Fredoka";
         ctx.fillText(username, 205, 100);
 
-        ctx.strokeStyle = "rgba(255, 204, 0, 0.4)";
+        ctx.strokeStyle = "rgba(255, 204, 0, 0.2)";
         ctx.strokeRect(185, 125, 580, 40);
         ctx.fillStyle = "#aaa";
         ctx.font = "18px Fredoka";
@@ -92,21 +124,18 @@ function generateCard() {
             const g = ctx.createLinearGradient(xStart, yStart, xStart, yStart + 25);
             g.addColorStop(0, c2); g.addColorStop(1, c1);
             ctx.fillStyle = g;
-            ctx.beginPath(); 
-            ctx.roundRect(xStart, yStart, bWidth, 25, 6); 
-            ctx.fill();
-            ctx.fillStyle = "white"; 
-            ctx.fillText(role, xStart + 13, yStart + 17);
+            ctx.beginPath(); ctx.roundRect(xStart, yStart, bWidth, 25, 6); ctx.fill();
+            ctx.fillStyle = "white"; ctx.fillText(role, xStart + 13, yStart + 17);
             xStart += bWidth + 10;
         });
         ctx.restore();
 
-        // --- BIO (Динамический) ---
+        // --- BIO ---
         ctx.save();
         const bioY = yStart + 45;
-        ctx.strokeStyle = "rgba(255, 122, 24, 0.5)";
+        ctx.strokeStyle = "rgba(255, 122, 24, 0.3)";
         ctx.strokeRect(185, bioY, 580, 45);
-        ctx.fillStyle = "rgba(20, 21, 31, 0.4)"; 
+        ctx.fillStyle = "rgba(255, 255, 255, 0.05)"; 
         ctx.fillRect(185, bioY, 580, 45);
         ctx.fillStyle = "#eee";
         ctx.font = "italic 16px Fredoka";
@@ -141,10 +170,13 @@ function generateCard() {
 
         // --- ЛОГО (ORO) ---
         ctx.save();
-        ctx.textAlign = "right"; // Это выравнивание больше не "сломает" остальные части
-        ctx.fillStyle = "white"; 
+        ctx.textAlign = "right";
+        const oroGrad = ctx.createLinearGradient(700, 360, 760, 360);
+        oroGrad.addColorStop(0, "#ffcc00");
+        oroGrad.addColorStop(1, "#ff7a18");
+        ctx.fillStyle = oroGrad;
         ctx.font = "bold 50px Fredoka";
-        ctx.shadowColor = "#ff7a18"; 
+        ctx.shadowColor = "#ff7a18";
         ctx.shadowBlur = 15;
         ctx.fillText("ORO", 760, 360);
         ctx.restore();
@@ -166,7 +198,6 @@ function generateCard() {
 
     const avatarInput = document.getElementById("avatar");
     
-    // Рамка аватара
     ctx.save();
     ctx.strokeStyle = "rgba(255, 122, 24, 0.7)";
     ctx.lineWidth = 1;
@@ -185,7 +216,6 @@ function generateCard() {
         };
         reader.readAsDataURL(avatarInput.files[0]);
     } else {
-        // Если нет аватара, рисуем пустую рамку
         ctx.fillStyle = "#1a1a2e";
         ctx.fillRect(avX + 1, avY + 1, avS - 2, avS - 2);
         drawFinalLayer();
