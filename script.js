@@ -18,19 +18,22 @@ function initDigitalFlow() {
     }
 }
 
-// --- ФУНКЦИЯ НАКЛОНА (TILT EFFECT) ---
+// --- ОБНОВЛЕННАЯ ФУНКЦИЯ НАКЛОНА (ТОЛЬКО НА КАРТОЧКЕ) ---
 function initTilt() {
     const canvas = document.getElementById("cardCanvas");
     if (!canvas) return;
 
-    document.addEventListener("mousemove", (e) => {
+    // Слушаем движение мыши ТОЛЬКО на канвасе
+    canvas.addEventListener("mousemove", (e) => {
         if (canvas.style.display === "none") return;
 
         const rect = canvas.getBoundingClientRect();
+        
+        // Вычисляем позицию курсора относительно КАРТОЧКИ, а не окна
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
 
-        // Определяем центр
+        // Определяем центр карточки
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
 
@@ -41,7 +44,7 @@ function initTilt() {
         canvas.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
     });
 
-    // Сброс наклона, когда мышь уходит
+    // Плавный сброс наклона, когда мышь уходит с поверхности карточки
     canvas.addEventListener("mouseleave", () => {
         canvas.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
     });
@@ -93,7 +96,7 @@ function generateCard() {
         animationId = requestAnimationFrame(frame);
     }
     
-    // Инициализируем наклон один раз
+    // Инициализируем наклон один раз при генерации
     initTilt();
 }
 
