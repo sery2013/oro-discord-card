@@ -19,7 +19,10 @@
     <div class="container">
         <div class="panel">
             <input type="text" id="username" placeholder="Username">
-            <input type="date" id="date" lang="en-US">
+            
+            <input type="text" id="date" placeholder="Date: MM/DD/YYYY" 
+                   onfocus="(this.type='date')" 
+                   onblur="if(!this.value)this.type='text'">
             
             <div class="file-upload">
                 <label for="avatar" class="file-upload-btn">
