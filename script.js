@@ -303,7 +303,7 @@ function renderAll(ctx, canvas, avatarImg) {
 
     // Соцсети и иконки
     ctx.save();
-    const sY = bioY + 105;
+    const sY = bioY + 145;
     ctx.font = "14px Fredoka"; ctx.fillStyle = "white";
     const drawIcon = (x, y, color, type) => {
         ctx.save(); ctx.translate(x, y - 12); ctx.fillStyle = color;
