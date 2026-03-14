@@ -1,19 +1,20 @@
-// --- ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ДЛЯ ЭФФЕКТОВ ---
+// --- ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ И НАСТРОЙКИ ---
 let particles = [];
 let animationId = null;
 let scanLineY = 0;
 let isGenerating = false; 
 let currentAvatarImg = null; 
-
 let reflectionPos = -500; 
 let mouseX = 0;
 let mouseY = 0;
 
+// Отслеживание мыши для эффекта притяжения линий
 window.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
 });
 
+// Система звуковых эффектов
 function playSound(id, stop = false) {
     const s = document.getElementById(id);
     if (!s) return;
@@ -25,6 +26,7 @@ function playSound(id, stop = false) {
     }
 }
 
+// Инициализация потока частиц внутри карточки
 function initDigitalFlow() {
     particles = [];
     for (let i = 0; i < 50; i++) {
@@ -38,6 +40,7 @@ function initDigitalFlow() {
     }
 }
 
+// 3D Tilt эффект для канваса
 function initTilt() {
     const canvas = document.getElementById("cardCanvas");
     if (!canvas) return;
@@ -59,6 +62,7 @@ function initTilt() {
     });
 }
 
+// ОСНОВНАЯ ФУНКЦИЯ ГЕНЕРАЦИИ
 function generateCard() {
     playSound("soundClick");
     playSound("soundScan"); 
@@ -73,6 +77,7 @@ function generateCard() {
     canvas.classList.add("canvas-generating");
     scanLineY = 0; 
 
+    // Симуляция процесса сканирования
     setTimeout(() => {
         isGenerating = false;
         canvas.classList.remove("canvas-generating");
@@ -85,6 +90,7 @@ function generateCard() {
 
     const avatarInput = document.getElementById("avatar");
 
+    // Загрузка аватара пользователя
     if (avatarInput.files && avatarInput.files[0]) {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -111,6 +117,7 @@ function generateCard() {
     initTilt();
 }
 
+// Инициализация календаря Flatpickr
 document.addEventListener("DOMContentLoaded", () => {
     if(typeof flatpickr !== 'undefined') {
         flatpickr("#date", {
@@ -122,11 +129,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+// ГЛАВНЫЙ ЦИКЛ ОТРИСОВКИ (RENDER ENGINE)
 function renderAll(ctx, canvas, avatarImg) {
     ctx.textAlign = "left";
     ctx.textBaseline = "alphabetic";
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // Эффект глитча при генерации
     let glitchX = 0;
     let glitchY = 0;
     if (isGenerating && Math.random() > 0.8) {
@@ -137,15 +146,18 @@ function renderAll(ctx, canvas, avatarImg) {
     ctx.save();
     ctx.translate(glitchX, glitchY);
 
+    // Фон самой карточки (Темный хайтек)
     ctx.fillStyle = '#050508';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    // Оранжевое свечение в углу
     const topGrad = ctx.createRadialGradient(canvas.width, 0, 50, canvas.width, 0, 400);
-    topGrad.addColorStop(0, 'rgba(255, 122, 24, 0.15)');
+    topGrad.addColorStop(0, 'rgba(255, 122, 24, 0.2)');
     topGrad.addColorStop(1, 'rgba(255, 122, 24, 0)');
     ctx.fillStyle = topGrad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    // Летающие частицы внутри карточки
     particles.forEach(p => {
         p.y += p.speed;
         if (p.y > 400) p.y = -p.length;
@@ -160,7 +172,7 @@ function renderAll(ctx, canvas, avatarImg) {
         ctx.stroke();
     });
 
-    // Декоративная сетка
+    // Декоративная сетка точек
     ctx.save();
     ctx.fillStyle = "rgba(255, 255, 255, 0.03)";
     for (let x = 0; x < canvas.width; x += 30) {
@@ -170,20 +182,28 @@ function renderAll(ctx, canvas, avatarImg) {
     }
     ctx.restore();
 
-    // Аватар
+    // ОТРИСОВКА АВАТАРА
     const avX = 25, avY = 70, avS = 140;
     ctx.save();
+    // Рамка аватара
     ctx.strokeStyle = "rgba(255, 122, 24, 0.7)";
+    ctx.lineWidth = 2;
     ctx.strokeRect(avX, avY, avS, avS);
+    
     if (avatarImg) {
-        ctx.drawImage(avatarImg, avX + 1, avY + 1, avS - 2, avS - 2);
+        ctx.drawImage(avatarImg, avX + 2, avY + 2, avS - 4, avS - 4);
     } else {
         ctx.fillStyle = "#1a1a2e";
-        ctx.fillRect(avX + 1, avY + 1, avS - 2, avS - 2);
+        ctx.fillRect(avX + 2, avY + 2, avS - 4, avS - 4);
+        ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+        ctx.font = "12px Fredoka";
+        ctx.textAlign = "center";
+        ctx.fillText("NO PHOTO", avX + avS/2, avY + avS/2);
     }
     ctx.restore();
 
-    // Тексты
+    // ТЕКСТОВЫЕ ДАННЫЕ
+    ctx.textAlign = "left";
     ctx.fillStyle = "white";
     ctx.font = "bold 30px Fredoka";
     ctx.fillText("USER CARD", 25, 45);
@@ -192,63 +212,93 @@ function renderAll(ctx, canvas, avatarImg) {
     const date = document.getElementById("date").value || "03/12/2026";
     const bioText = document.getElementById("userBio").value || "Web3 Explorer";
 
-    ctx.font = "bold 24px Fredoka";
+    // Никнейм
+    ctx.font = "bold 26px Fredoka";
+    ctx.fillStyle = "#ffcc00";
     ctx.fillText(username, 205, 100);
-    ctx.font = "18px Fredoka"; ctx.fillStyle = "#aaa";
-    ctx.fillText("Joined: " + date, 205, 152);
 
-    // Роли
-    const selectedRoles = Array.from(document.querySelectorAll(".roles input[type='checkbox']")).filter(chk => chk.checked).map(chk => chk.value);
-    let xStart = 185, yStart = 180;
+    // Дата вступления
+    ctx.font = "16px Fredoka"; 
+    ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+    ctx.fillText("VALID SINCE: " + date, 205, 130);
+
+    // ОТРИСОВКА РОЛЕЙ (БАДЖИ)
+    const selectedRoles = Array.from(document.querySelectorAll(".roles input[type='checkbox']"))
+                               .filter(chk => chk.checked)
+                               .map(chk => chk.value);
+    
+    let xStart = 205, yStart = 155;
     selectedRoles.forEach(role => {
-        ctx.font = "bold 13px Fredoka";
-        const bWidth = ctx.measureText(role).width + 26;
-        ctx.fillStyle = "#ff7a18";
-        ctx.beginPath(); ctx.roundRect(xStart, yStart, bWidth, 25, 6); ctx.fill();
-        ctx.fillStyle = "white"; ctx.fillText(role, xStart + 13, yStart + 17);
-        xStart += bWidth + 10;
+        ctx.font = "bold 12px Fredoka";
+        const bWidth = ctx.measureText(role).width + 20;
+        
+        // Оранжевая подложка роли
+        ctx.fillStyle = "rgba(255, 122, 24, 0.9)";
+        ctx.beginPath(); 
+        ctx.roundRect(xStart, yStart, bWidth, 22, 5); 
+        ctx.fill();
+        
+        // Текст роли
+        ctx.fillStyle = "white"; 
+        ctx.fillText(role, xStart + 10, yStart + 15);
+        
+        xStart += bWidth + 8;
+        if (xStart > 700) { xStart = 205; yStart += 30; } // Перенос ролей
     });
 
-    // БИО
-    ctx.fillStyle = "#eee"; ctx.font = "italic 16px Fredoka";
-    ctx.fillText(bioText, 205, yStart + 73);
+    // БИОГРАФИЯ
+    ctx.fillStyle = "#ffffff"; 
+    ctx.font = "16px Fredoka";
+    const wrapBio = bioText.length > 50 ? bioText.substring(0, 50) + "..." : bioText;
+    ctx.fillText(wrapBio, 205, 230);
 
-    // Логотип ORO
+    // ЛОГОТИП ORO (В нижнем углу)
     ctx.textAlign = "right";
-    ctx.fillStyle = "#ff7a18"; ctx.font = "bold 50px Fredoka";
-    ctx.fillText("ORO", 760, 360);
+    ctx.fillStyle = "#ff7a18"; 
+    ctx.font = "bold 45px Fredoka";
+    ctx.fillText("ORO", 770, 370);
 
-    // Блик
-    reflectionPos += 4; 
+    // ДИНАМИЧЕСКИЙ БЛИК (REFLECTION EFFECT)
+    reflectionPos += 5; 
     if (reflectionPos > canvas.width + 500) reflectionPos = -500;
     const reflectGrad = ctx.createLinearGradient(reflectionPos, 0, reflectionPos + 300, 400);
     reflectGrad.addColorStop(0, "rgba(255, 255, 255, 0)");
-    reflectGrad.addColorStop(0.5, "rgba(255, 255, 255, 0.1)"); 
+    reflectGrad.addColorStop(0.5, "rgba(255, 255, 255, 0.08)"); 
     reflectGrad.addColorStop(1, "rgba(255, 255, 255, 0)");
     ctx.fillStyle = reflectGrad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.restore();
 
+    // ЛИНИЯ СКАНИРОВАНИЯ
     if (isGenerating) {
-        scanLineY += 8;
+        scanLineY += 7;
         if (scanLineY > 400) scanLineY = 0;
-        ctx.strokeStyle = "#ffcc00";
-        ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.moveTo(0, scanLineY); ctx.lineTo(canvas.width, scanLineY); ctx.stroke();
+        ctx.strokeStyle = "rgba(255, 204, 0, 0.8)";
+        ctx.lineWidth = 3;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = "#ffcc00";
+        ctx.beginPath(); 
+        ctx.moveTo(0, scanLineY); 
+        ctx.lineTo(canvas.width, scanLineY); 
+        ctx.stroke();
+        ctx.shadowBlur = 0; // Сброс тени для остальных элементов
     }
 }
 
+// ФУНКЦИЯ СКАЧИВАНИЯ
 function downloadCard() {
     playSound("soundClick");
     const canvas = document.getElementById("cardCanvas");
+    if (!canvas || canvas.style.display === "none") return;
+    
     const link = document.createElement("a");
-    link.download = "oro-card.png";
+    link.download = `ORO_Card_${document.getElementById("username").value || 'user'}.png`;
     link.href = canvas.toDataURL("image/png");
     link.click();
 }
 
-// --- ФОНОВАЯ АНИМАЦИЯ САЙТА (ПОЛНАЯ ЛОГИКА) ---
+// --- ФОНОВАЯ АНИМАЦИЯ САЙТА (МАТРИЦА/ЛИНИИ) ---
 (function() {
     const bgCanvas = document.getElementById("bgCanvas");
     if (!bgCanvas) return;
@@ -258,27 +308,31 @@ function downloadCard() {
     function init() {
         bgCanvas.width = window.innerWidth;
         bgCanvas.height = window.innerHeight;
-        bgLines = Array.from({ length: 80 }, () => ({
-            x: Math.random() * bgCanvas.width,
-            y: Math.random() * bgCanvas.height,
-            speed: Math.random() * 1 + 0.5,
-            len: Math.random() * 100 + 50,
-            op: Math.random() * 0.3
-        }));
+        bgLines = [];
+        for (let i = 0; i < 80; i++) {
+            bgLines.push({
+                x: Math.random() * bgCanvas.width,
+                y: Math.random() * bgCanvas.height,
+                speed: Math.random() * 0.8 + 0.2,
+                len: Math.random() * 150 + 50,
+                op: Math.random() * 0.25
+            });
+        }
     }
 
     function animate() {
-        // Очищаем прозрачно для видимости CSS градиента
         bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
         
         bgLines.forEach(l => {
+            // Рассчитываем влияние мыши
             let dx = mouseX - l.x;
             let dy = mouseY - l.y;
             let dist = Math.sqrt(dx*dx + dy*dy);
             let currentSpeed = l.speed;
             
-            if (dist < 250) {
-                currentSpeed += (1 - dist/250) * 6;
+            // Если мышь рядом, линии ускоряются
+            if (dist < 300) {
+                currentSpeed += (1 - dist/300) * 5;
             }
 
             l.y += currentSpeed;
@@ -287,12 +341,13 @@ function downloadCard() {
                 l.x = Math.random() * bgCanvas.width; 
             }
             
-            // Белые линии бликов
+            // Белые «энергетические» линии на оранжевом фоне
             let g = bgCtx.createLinearGradient(0, l.y, 0, l.y + l.len);
             g.addColorStop(0, 'transparent');
-            g.addColorStop(1, `rgba(255, 255, 255, ${l.op + 0.1})`);
+            g.addColorStop(1, `rgba(255, 255, 255, ${l.op})`);
+            
             bgCtx.strokeStyle = g;
-            bgCtx.lineWidth = 1.2;
+            bgCtx.lineWidth = 1;
             bgCtx.beginPath(); 
             bgCtx.moveTo(l.x, l.y); 
             bgCtx.lineTo(l.x, l.y + l.len); 
