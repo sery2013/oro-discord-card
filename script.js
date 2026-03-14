@@ -18,33 +18,23 @@ function initDigitalFlow() {
     }
 }
 
-// --- ОБНОВЛЕННАЯ ФУНКЦИЯ НАКЛОНА (ТОЛЬКО НА КАРТОЧКЕ) ---
+// --- ОБНОВЛЕННАЯ ФУНКЦИЯ НАКЛОНА ---
 function initTilt() {
     const canvas = document.getElementById("cardCanvas");
     if (!canvas) return;
 
-    // Слушаем движение мыши ТОЛЬКО на канвасе
     canvas.addEventListener("mousemove", (e) => {
         if (canvas.style.display === "none") return;
-
         const rect = canvas.getBoundingClientRect();
-        
-        // Вычисляем позицию курсора относительно КАРТОЧКИ, а не окна
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-
-        // Определяем центр карточки
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
-
-        // Вычисляем угол наклона (макс. 10 градусов)
         const rotateX = (-(y - centerY) / centerY) * 10;
         const rotateY = ((x - centerX) / centerX) * 10;
-
         canvas.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
     });
 
-    // Плавный сброс наклона, когда мышь уходит с поверхности карточки
     canvas.addEventListener("mouseleave", () => {
         canvas.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
     });
@@ -67,7 +57,6 @@ function generateCard() {
     }, 2500);
 
     const ctx = canvas.getContext("2d");
-
     if (particles.length === 0) initDigitalFlow();
     if (animationId) cancelAnimationFrame(animationId);
 
@@ -96,7 +85,6 @@ function generateCard() {
         animationId = requestAnimationFrame(frame);
     }
     
-    // Инициализируем наклон один раз при генерации
     initTilt();
 }
 
@@ -104,15 +92,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputs = ["username", "userBio"];
     inputs.forEach(id => {
         const el = document.getElementById(id);
-        if (el) {
-            el.addEventListener("input", () => {});
-        }
+        if (el) { el.addEventListener("input", () => {}); }
     });
 
-    // --- ИНИЦИАЛИЗАЦИЯ АНГЛИЙСКОГО КАЛЕНДАРЯ ---
     if(typeof flatpickr !== 'undefined') {
         flatpickr("#date", {
-            dateFormat: "m/d/Y", // Формат MM/DD/YYYY
+            dateFormat: "m/d/Y",
             altInput: true,
             altFormat: "F j, Y",
             theme: "dark",
@@ -124,8 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
-
-    document.querySelector(".roles")?.addEventListener("change", () => {});
 });
 
 function renderAll(ctx, canvas, avatarImg) {
@@ -135,9 +118,21 @@ function renderAll(ctx, canvas, avatarImg) {
     ctx.shadowColor = "transparent";
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // --- ГЛИТЧ: СМЕЩЕНИЕ ВСЕГО КОНТЕНТА ---
+    let glitchX = 0;
+    let glitchY = 0;
+    if (isGenerating && Math.random() > 0.8) {
+        glitchX = Math.random() * 4 - 2;
+        glitchY = Math.random() * 2 - 1;
+    }
+
+    ctx.save();
+    ctx.translate(glitchX, glitchY);
+
     ctx.fillStyle = '#050508';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    // Градиенты фона
     const topGrad = ctx.createRadialGradient(canvas.width, 0, 50, canvas.width, 0, 400);
     topGrad.addColorStop(0, 'rgba(255, 122, 24, 0.15)');
     topGrad.addColorStop(1, 'rgba(255, 122, 24, 0)');
@@ -150,6 +145,7 @@ function renderAll(ctx, canvas, avatarImg) {
     ctx.fillStyle = bottomGrad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    // Частицы
     particles.forEach(p => {
         p.y += p.speed;
         if (p.y > 400) p.y = -p.length;
@@ -166,10 +162,7 @@ function renderAll(ctx, canvas, avatarImg) {
         ctx.beginPath(); ctx.arc(p.x, p.y + p.length, 1, 0, Math.PI * 2); ctx.fill();
     });
 
-    let staticScanY = (Date.now() * 0.05) % 400;
-    ctx.fillStyle = "rgba(255, 122, 24, 0.04)";
-    ctx.fillRect(0, staticScanY, canvas.width, 1.5);
-
+    // Декоративная сетка и символы
     ctx.save();
     ctx.fillStyle = "rgba(255, 255, 255, 0.03)";
     for (let x = 0; x < canvas.width; x += 30) {
@@ -191,11 +184,19 @@ function renderAll(ctx, canvas, avatarImg) {
     }
     ctx.restore();
 
+    // Аватар
     const avX = 25, avY = 70, avS = 140;
     ctx.save();
     ctx.strokeStyle = "rgba(255, 122, 24, 0.7)";
     ctx.strokeRect(avX, avY, avS, avS);
+    
     if (avatarImg) {
+        // ГЛИТЧ АВАТАРА: RGB Split
+        if (isGenerating && Math.random() > 0.85) {
+            ctx.globalAlpha = 0.5;
+            ctx.drawImage(avatarImg, avX + 5, avY, avS - 2, avS - 2);
+            ctx.globalAlpha = 1;
+        }
         ctx.drawImage(avatarImg, avX + 1, avY + 1, avS - 2, avS - 2);
     } else {
         ctx.fillStyle = "#1a1a2e";
@@ -203,6 +204,7 @@ function renderAll(ctx, canvas, avatarImg) {
     }
     ctx.restore();
 
+    // Заголовок USER CARD
     ctx.save();
     ctx.fillStyle = "white";
     ctx.font = "bold 30px Fredoka";
@@ -211,6 +213,7 @@ function renderAll(ctx, canvas, avatarImg) {
     ctx.fillText("USER CARD", 25, 45);
     ctx.restore();
 
+    // Разделительная линия
     ctx.save();
     const lineGrad = ctx.createLinearGradient(275, 0, 765, 0);
     lineGrad.addColorStop(0, "rgba(255, 122, 24, 0)");
@@ -221,11 +224,9 @@ function renderAll(ctx, canvas, avatarImg) {
     ctx.beginPath(); ctx.moveTo(275, 35); ctx.lineTo(765, 35); ctx.stroke();
     ctx.restore();
 
+    // Данные пользователя
     const username = document.getElementById("username").value || "sery2013";
-    
-    // Берём значение из инпута (Flatpickr отдаст m/d/Y)
     const date = document.getElementById("date").value || "03/12/2026";
-    
     const bioText = document.getElementById("userBio").value || "Web3 Explorer & Content Enthusiast";
 
     ctx.save();
@@ -240,6 +241,7 @@ function renderAll(ctx, canvas, avatarImg) {
     ctx.fillText("Joined: " + date, 205, 152);
     ctx.restore();
 
+    // Роли
     ctx.save();
     const selectedRoles = Array.from(document.querySelectorAll(".roles input[type='checkbox']")).filter(chk => chk.checked).map(chk => chk.value);
     let xStart = 185, yStart = 180;
@@ -264,6 +266,7 @@ function renderAll(ctx, canvas, avatarImg) {
     });
     ctx.restore();
 
+    // Блок БИО
     ctx.save();
     const bioY = yStart + 45;
     ctx.strokeStyle = "rgba(255, 122, 24, 0.3)";
@@ -274,6 +277,7 @@ function renderAll(ctx, canvas, avatarImg) {
     ctx.fillText(bioText, 205, bioY + 28);
     ctx.restore();
 
+    // Соцсети и иконки
     ctx.save();
     const sY = bioY + 105;
     ctx.font = "14px Fredoka"; ctx.fillStyle = "white";
@@ -294,6 +298,7 @@ function renderAll(ctx, canvas, avatarImg) {
     ctx.fillText("🌐 getoro.xyz", 505, sY);
     ctx.restore();
 
+    // Логотип ORO
     ctx.save();
     ctx.textAlign = "right";
     const pulse = 10 + Math.sin(Date.now() / 500) * 8;
@@ -304,6 +309,7 @@ function renderAll(ctx, canvas, avatarImg) {
     ctx.fillText("ORO", 760, 360);
     ctx.restore();
 
+    // QR Код
     const qrSrc = "https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://getoro.xyz";
     const qrImg = new Image();
     qrImg.crossOrigin = "anonymous";
@@ -314,6 +320,15 @@ function renderAll(ctx, canvas, avatarImg) {
         ctx.fillText("getoro.xyz", 95, 380);
     }
 
+    // --- ГЛИТЧ: СЛУЧАЙНЫЕ ПОЛОСКИ ---
+    if (isGenerating && Math.random() > 0.9) {
+        ctx.fillStyle = "rgba(255, 122, 24, 0.15)";
+        ctx.fillRect(0, Math.random() * 400, 800, Math.random() * 40);
+    }
+
+    ctx.restore(); // Конец общей трансляции (тряски)
+
+    // Сканирующая линия
     if (isGenerating) {
         scanLineY += 8;
         if (scanLineY > 400) scanLineY = 0;
@@ -340,6 +355,7 @@ function downloadCard() {
     link.click();
 }
 
+// --- ФОНОВАЯ АНИМАЦИЯ САЙТА (bgCanvas) ---
 (function() {
     const bgCanvas = document.getElementById("bgCanvas");
     if (!bgCanvas) return;
