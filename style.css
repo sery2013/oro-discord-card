@@ -320,3 +320,21 @@ canvas#cardCanvas {
     50% { box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 25px rgba(255, 122, 24, 0.4); }
     100% { box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0px rgba(255, 122, 24, 0); }
 }
+/* Делаем подсказку для даты на английском */
+input[type="date"]::before {
+    content: "Date: ";
+    color: rgba(255, 255, 255, 0.5);
+    margin-right: 5px;
+}
+
+/* Если дата не выбрана, показываем формат MM/DD/YYYY */
+input[type="date"]:invalid::after {
+    content: "MM/DD/YYYY";
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Убираем стандартные иконки, если они мешают дизайну (опционально) */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1); /* Делает иконку календаря белой под твой темный стиль */
+    cursor: pointer;
+}
