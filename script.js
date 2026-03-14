@@ -5,6 +5,29 @@ let scanLineY = 0;
 let isGenerating = false; 
 let currentAvatarImg = null; 
 
+// Новые переменные для улучшений
+let reflectionPos = -500; 
+let mouseX = 0;
+let mouseY = 0;
+
+// Отслеживание мыши для интерактивного фона
+window.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+});
+
+// Функция для воспроизведения звуков
+function playSound(id, stop = false) {
+    const s = document.getElementById(id);
+    if (!s) return;
+    if (stop) {
+        s.pause();
+        s.currentTime = 0;
+    } else {
+        s.play().catch(() => {}); // Игнорируем ошибку, если браузер блокирует звук до клика
+    }
+}
+
 function initDigitalFlow() {
     particles = [];
     for (let i = 0; i < 50; i++) {
@@ -18,7 +41,6 @@ function initDigitalFlow() {
     }
 }
 
-// --- ОБНОВЛЕННАЯ ФУНКЦИЯ НАКЛОНА ---
 function initTilt() {
     const canvas = document.getElementById("cardCanvas");
     if (!canvas) return;
@@ -41,6 +63,9 @@ function initTilt() {
 }
 
 function generateCard() {
+    playSound("soundClick"); // Звук клика
+    playSound("soundScan");  // Старт звука сканирования
+
     const canvas = document.getElementById("cardCanvas");
     const skeleton = document.getElementById("skeleton");
     
@@ -54,6 +79,7 @@ function generateCard() {
     setTimeout(() => {
         isGenerating = false;
         canvas.classList.remove("canvas-generating");
+        playSound("soundScan", true); // Остановка звука сканирования
     }, 2500);
 
     const ctx = canvas.getContext("2d");
@@ -118,7 +144,6 @@ function renderAll(ctx, canvas, avatarImg) {
     ctx.shadowColor = "transparent";
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // --- ГЛИТЧ: СМЕЩЕНИЕ ВСЕГО КОНТЕНТА ---
     let glitchX = 0;
     let glitchY = 0;
     if (isGenerating && Math.random() > 0.8) {
@@ -191,7 +216,6 @@ function renderAll(ctx, canvas, avatarImg) {
     ctx.strokeRect(avX, avY, avS, avS);
     
     if (avatarImg) {
-        // ГЛИТЧ АВАТАРА: RGB Split
         if (isGenerating && Math.random() > 0.85) {
             ctx.globalAlpha = 0.5;
             ctx.drawImage(avatarImg, avX + 5, avY, avS - 2, avS - 2);
@@ -326,6 +350,19 @@ function renderAll(ctx, canvas, avatarImg) {
         ctx.fillRect(0, Math.random() * 400, 800, Math.random() * 40);
     }
 
+    // --- ЭФФЕКТ СТЕКЛЯННОГО БЛИКА ---
+    reflectionPos += 4; 
+    if (reflectionPos > canvas.width + 500) reflectionPos = -500;
+    ctx.save();
+    const reflectGrad = ctx.createLinearGradient(reflectionPos, 0, reflectionPos + 300, 400);
+    reflectGrad.addColorStop(0, "rgba(255, 255, 255, 0)");
+    reflectGrad.addColorStop(0.5, "rgba(255, 255, 255, 0.1)"); 
+    reflectGrad.addColorStop(1, "rgba(255, 255, 255, 0)");
+    ctx.fillStyle = reflectGrad;
+    ctx.globalCompositeOperation = "overlay"; 
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.restore();
+
     ctx.restore(); // Конец общей трансляции (тряски)
 
     // Сканирующая линия
@@ -348,6 +385,7 @@ function renderAll(ctx, canvas, avatarImg) {
 }
 
 function downloadCard() {
+    playSound("soundClick");
     const canvas = document.getElementById("cardCanvas");
     const link = document.createElement("a");
     link.download = "oro-animated-card.png";
@@ -355,7 +393,7 @@ function downloadCard() {
     link.click();
 }
 
-// --- ФОНОВАЯ АНИМАЦИЯ САЙТА (bgCanvas) ---
+// --- ФОНОВАЯ АНИМАЦИЯ САЙТА (С ИНТЕРАКТИВОМ) ---
 (function() {
     const bgCanvas = document.getElementById("bgCanvas");
     if (!bgCanvas) return;
@@ -365,7 +403,7 @@ function downloadCard() {
     function init() {
         bgCanvas.width = window.innerWidth;
         bgCanvas.height = window.innerHeight;
-        bgLines = Array.from({ length: 60 }, () => ({
+        bgLines = Array.from({ length: 80 }, () => ({
             x: Math.random() * bgCanvas.width,
             y: Math.random() * bgCanvas.height,
             speed: Math.random() * 1 + 0.5,
@@ -377,14 +415,33 @@ function downloadCard() {
     function animate() {
         bgCtx.fillStyle = '#050508';
         bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
+        
         bgLines.forEach(l => {
-            l.y += l.speed;
-            if (l.y > bgCanvas.height) { l.y = -l.len; l.x = Math.random() * bgCanvas.width; }
+            // Реакция на мышь
+            let dx = mouseX - l.x;
+            let dy = mouseY - l.y;
+            let dist = Math.sqrt(dx*dx + dy*dy);
+            let currentSpeed = l.speed;
+            
+            if (dist < 250) {
+                currentSpeed += (1 - dist/250) * 6; // Линии ускоряются рядом с мышью
+            }
+
+            l.y += currentSpeed;
+            if (l.y > bgCanvas.height) { 
+                l.y = -l.len; 
+                l.x = Math.random() * bgCanvas.width; 
+            }
+            
             let g = bgCtx.createLinearGradient(0, l.y, 0, l.y + l.len);
             g.addColorStop(0, 'transparent');
             g.addColorStop(1, `rgba(255, 122, 24, ${l.op})`);
             bgCtx.strokeStyle = g;
-            bgCtx.beginPath(); bgCtx.moveTo(l.x, l.y); bgCtx.lineTo(l.x, l.y + l.len); bgCtx.stroke();
+            bgCtx.lineWidth = 1.2;
+            bgCtx.beginPath(); 
+            bgCtx.moveTo(l.x, l.y); 
+            bgCtx.lineTo(l.x, l.y + l.len); 
+            bgCtx.stroke();
         });
         requestAnimationFrame(animate);
     }
