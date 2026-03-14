@@ -101,13 +101,29 @@ function generateCard() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const inputs = ["username", "date", "userBio"];
+    const inputs = ["username", "userBio"];
     inputs.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
             el.addEventListener("input", () => {});
         }
     });
+
+    // --- ИНИЦИАЛИЗАЦИЯ АНГЛИЙСКОГО КАЛЕНДАРЯ ---
+    if(typeof flatpickr !== 'undefined') {
+        flatpickr("#date", {
+            dateFormat: "m/d/Y", // Формат MM/DD/YYYY
+            altInput: true,
+            altFormat: "F j, Y",
+            theme: "dark",
+            locale: {
+                months: {
+                    shorthand: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                    longhand: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+                }
+            }
+        });
+    }
 
     document.querySelector(".roles")?.addEventListener("change", () => {});
 });
@@ -206,7 +222,10 @@ function renderAll(ctx, canvas, avatarImg) {
     ctx.restore();
 
     const username = document.getElementById("username").value || "sery2013";
-    const date = document.getElementById("date").value || "2026-03-12";
+    
+    // Берём значение из инпута (Flatpickr отдаст m/d/Y)
+    const date = document.getElementById("date").value || "03/12/2026";
+    
     const bioText = document.getElementById("userBio").value || "Web3 Explorer & Content Enthusiast";
 
     ctx.save();
